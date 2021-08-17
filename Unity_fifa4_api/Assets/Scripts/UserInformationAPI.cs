@@ -32,4 +32,19 @@ public class UserInformationAPI : MonoBehaviour
             }
         }
     }
+
+    IEnumerator Co_InquireAccessIdToRating(string accessId)
+    {
+        string requestText = string.Format("https://api.nexon.co.kr/fifaonline4/v1.0/users/{0}/maxdivision", accessId);
+
+        if (!manager)
+        {
+            yield return StartCoroutine(manager.Co_GetRequest(requestText));
+
+            if (manager.ResponseText != string.Empty)
+            {
+
+            }
+        }
+    }
 }

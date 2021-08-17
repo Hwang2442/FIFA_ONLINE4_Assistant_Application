@@ -48,21 +48,4 @@ public class FIFAManager : MonoBehaviour
             }
         }
     }
-
-    #region Database class
-
-    [Serializable]
-    public class UserInformation
-    {
-        public string accessId;
-        public string nickname;
-        public int level;
-    }
-
-    public class HighestRatingEver
-    {
-        public int matchType;
-    }
-
-    #endregion
 }

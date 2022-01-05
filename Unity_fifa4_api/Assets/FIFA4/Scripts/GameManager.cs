@@ -4,5 +4,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static string AccessId { get; private set; }
+    #region Properties
+
+    public static GameManager Instance { get; private set; }
+
+    #endregion
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 }

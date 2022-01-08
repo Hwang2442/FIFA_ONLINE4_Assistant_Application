@@ -118,5 +118,33 @@ namespace FIFA4
         }
     }
 
+    [Serializable]
+    public class SpPosition
+    {
+        [JsonProperty("spposition")] public readonly int spPosition;
+        [JsonProperty("desc")] public readonly string desc;
+
+        [JsonConstructor]
+        public SpPosition([JsonProperty("spposition")] int spPosition, [JsonProperty("desc")] string desc)
+        {
+            this.spPosition = spPosition;
+            this.desc = desc;
+        }
+    }
+
+    [Serializable]
+    public class Division
+    {
+        [JsonProperty("divisionId")] public readonly int divisionId;
+        [JsonProperty("divisionName")] public readonly string divisionName;
+
+        [JsonConstructor]
+        public Division([JsonProperty("divisionId")] int divisionId, [JsonProperty("divisionName")] string divisionName)
+        {
+            this.divisionId = divisionId;
+            this.divisionName = divisionName;
+        }
+    }
+
     #endregion
 }

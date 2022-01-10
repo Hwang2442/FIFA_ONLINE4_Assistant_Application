@@ -1,17 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
-public class GameManager : MonoBehaviour
+namespace FIFA4
 {
-    #region Properties
-
-    public static GameManager Instance { get; private set; }
-
-    #endregion
-
-    private void Awake()
+    public class GameManager : MonoBehaviour
     {
-        Instance = this;
+        #region Variables
+
+        [SerializeField] UIManager m_ui;
+
+        #endregion
+
+        #region Properties
+
+        public static GameManager Instance { get; private set; }
+
+        #endregion
+
+        private void Awake()
+        {
+            Instance = this;
+        }
     }
 }

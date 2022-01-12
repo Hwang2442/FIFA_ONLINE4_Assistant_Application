@@ -11,17 +11,25 @@ namespace FIFA4
 
         [SerializeField] UIManager m_ui;
 
+        Request m_request;
+
         #endregion
 
         #region Properties
 
         public static GameManager Instance { get; private set; }
 
+        public UIManager UI => m_ui;
+
+        public Request RequestService => m_request;
+
         #endregion
 
         private void Awake()
         {
             Instance = this;
+
+            m_request = new Request();
         }
     }
 }

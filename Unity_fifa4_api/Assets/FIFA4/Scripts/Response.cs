@@ -1,4 +1,5 @@
-﻿using UnityEngine.Networking;
+﻿using System;
+using UnityEngine.Networking;
 
 namespace FIFA4
 {
@@ -32,6 +33,24 @@ namespace FIFA4
             this.content = www.downloadHandler.text;
 
             this.data = data;
+        }
+    }
+
+    public class Properties
+    {
+        public readonly ulong length;
+        public readonly DateTime dateTime;
+
+        public Properties(ulong length, DateTime dateTime)
+        {
+            this.length = length;
+            this.dateTime = dateTime;
+        }
+
+        public Properties(UnityWebRequest www)
+        {
+            this.length = ulong.Parse(www.GetResponseHeader("Content-Length"));
+            this.dateTime = DateTime.Parse(www.GetResponseHeader("Last-Modified"));
         }
     }
 }

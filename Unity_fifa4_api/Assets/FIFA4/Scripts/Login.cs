@@ -12,22 +12,55 @@ namespace FIFA4
 
         private void Start()
         {
-            var ui = GameManager.Instance.UI;
+            var manager = GameManager.Instance;
 
-            ui.LoginRememberToggle.isOn = PlayerPrefs.GetInt(rememberMePrefsKey, 0) == 1;   // Toggle.
-            ui.LoginNicknameField.text = PlayerPrefs.GetString(nicknamePrefsKey, "");       // Input field.
+            manager.UI.LoginRememberToggle.isOn = PlayerPrefs.GetInt(rememberMePrefsKey, 0) == 1;   // Toggle.
+            manager.UI.LoginNicknameField.text = PlayerPrefs.GetString(nicknamePrefsKey, "");       // Input field.
         }
 
         public void OnClickLogin()
         {
-            var ui = GameManager.Instance.UI;
+            var manager = GameManager.Instance;
 
-            PlayerPrefs.SetString(nicknamePrefsKey, ui.LoginRememberToggle.isOn ? ui.LoginNicknameField.text : "");
+            // Nickname is empty.
+            if (string.IsNullOrEmpty(manager.UI.LoginNicknameField.text))
+            {
+
+
+                return;
+            }
+
+            PlayerPrefs.SetString(nicknamePrefsKey, manager.UI.LoginRememberToggle.isOn ? manager.UI.LoginNicknameField.text : "");     // Save nickname.
+
+            // Get accessid.
+            StartCoroutine(Co_GetAccessid());
         }
 
         public void OnToggleChanged(bool value)
         {
             PlayerPrefs.SetInt(rememberMePrefsKey, value ? 1 : 0);
+        }
+
+        private IEnumerator Co_GetAccessid()
+        {
+            var manager = GameManager.Instance;
+
+            manager.LoadingComponent.Show("로그인 중입니다...");
+
+            yield return GameManager.Instance.RequestService.GetUserInformation((response) =>
+            {
+                // Login success
+                if (!response.isError)
+                {
+                    
+                }
+                else
+                {
+
+                }
+            }, null, GameManager.Instance.UI.LoginNicknameField.text);
+
+            //manager.LoadingComponent.Hide();
         }
     }
 }

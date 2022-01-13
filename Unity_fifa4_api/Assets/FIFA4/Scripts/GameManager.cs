@@ -9,7 +9,15 @@ namespace FIFA4
     {
         #region Variables
 
+        [Header("User information")]
+        [SerializeField] UserInformation m_userInformation;
+
+        [Header("UI")]
         [SerializeField] UIManager m_ui;
+
+        [Header("Components")]
+        [SerializeField] Login m_login;
+        [SerializeField] Loading m_loading;
 
         Request m_request;
 
@@ -21,7 +29,12 @@ namespace FIFA4
 
         public UIManager UI => m_ui;
 
+        public Login LoginComponent => m_login;
+        public Loading LoadingComponent => m_loading;
+
         public Request RequestService => m_request;
+
+        public UserInformation UserInformation => m_userInformation;
 
         #endregion
 
@@ -30,6 +43,11 @@ namespace FIFA4
             Instance = this;
 
             m_request = new Request();
+        }
+
+        public void SetUserInformation()
+        {
+
         }
     }
 }

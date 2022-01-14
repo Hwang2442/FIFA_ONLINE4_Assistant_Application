@@ -66,108 +66,108 @@ namespace FIFA4
 
         #region Meta information
 
-        public IEnumerator UpdateMatchType(UnityAction<Response<DateTime>> callback, UnityAction<float> onUpdate)
+        public IEnumerator UpdateMatchType(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate)
         {
             yield return UpdateRequest(callback, onUpdate, APIList.GetMatchType());
         }
 
-        public IEnumerator GetMatchType(UnityAction<Response<KeyValuePair<DateTime, MatchType[]>>> callback, UnityAction<float> onUpdate)
+        public IEnumerator GetMatchType(UnityAction<Response<KeyValuePair<Properties, MatchType[]>>> callback, UnityAction<float> onUpdate)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetMatchType()))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<KeyValuePair<DateTime, MatchType[]>>(www, new KeyValuePair<DateTime, MatchType[]>(DateTime.Parse(www.GetResponseHeader("Last-Modified")), JsonHelper.FromJson<MatchType[]>(www.downloadHandler.text))));
+                    callback(new Response<KeyValuePair<Properties, MatchType[]>>(www, new KeyValuePair<Properties, MatchType[]>(new Properties(www), JsonHelper.FromJson<MatchType[]>(www.downloadHandler.text))));
             }
         }
 
-        public IEnumerator UpdateSpid(UnityAction<Response<DateTime>> callback, UnityAction<float> onUpdate)
+        public IEnumerator UpdateSpid(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate)
         {
             yield return UpdateRequest(callback, onUpdate, APIList.GetSpid());
         }
 
-        public IEnumerator GetSpid(UnityAction<Response<KeyValuePair<DateTime, Spid[]>>> callback, UnityAction<float> onUpdate)
+        public IEnumerator GetSpid(UnityAction<Response<KeyValuePair<Properties, Spid[]>>> callback, UnityAction<float> onUpdate)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetSpid()))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<KeyValuePair<DateTime, Spid[]>>(www, new KeyValuePair<DateTime, Spid[]>(DateTime.Parse(www.GetResponseHeader("Last-Modified")), JsonHelper.FromJson<Spid[]>(www.downloadHandler.text))));
+                    callback(new Response<KeyValuePair<Properties, Spid[]>>(www, new KeyValuePair<Properties, Spid[]>(new Properties(www), JsonHelper.FromJson<Spid[]>(www.downloadHandler.text))));
             }
         }
 
-        public IEnumerator UpdateSeasonId(UnityAction<Response<DateTime>> callback, UnityAction<float> onUpdate)
+        public IEnumerator UpdateSeasonId(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate)
         {
             yield return UpdateRequest(callback, onUpdate, APIList.GetSeasonId());
         }
 
-        public IEnumerator GetSeasonId(UnityAction<Response<KeyValuePair<DateTime, SeasonId>>> callback, UnityAction<float> onUpdate)
+        public IEnumerator GetSeasonId(UnityAction<Response<KeyValuePair<Properties, SeasonId>>> callback, UnityAction<float> onUpdate)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetSeasonId()))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<KeyValuePair<DateTime, SeasonId>>(www, new KeyValuePair<DateTime, SeasonId>(DateTime.Parse(www.GetResponseHeader("Last-Modified")), JsonHelper.FromJson<SeasonId>(www.downloadHandler.text))));
+                    callback(new Response<KeyValuePair<Properties, SeasonId>>(www, new KeyValuePair<Properties, SeasonId>(new Properties(www), JsonHelper.FromJson<SeasonId>(www.downloadHandler.text))));
             }
         }
 
-        public IEnumerator UpdateSpPosition(UnityAction<Response<DateTime>> callback, UnityAction<float> onUpdate)
+        public IEnumerator UpdateSpPosition(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate)
         {
             yield return UpdateRequest(callback, onUpdate, APIList.GetSpposition());
         }
 
-        public IEnumerator GetSpPosition(UnityAction<Response<KeyValuePair<DateTime, SpPosition>>> callback, UnityAction<float> onUpdate)
+        public IEnumerator GetSpPosition(UnityAction<Response<KeyValuePair<Properties, SpPosition>>> callback, UnityAction<float> onUpdate)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetSpposition()))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<KeyValuePair<DateTime, SpPosition>>(www, new KeyValuePair<DateTime, SpPosition>(DateTime.Parse(www.GetResponseHeader("Last-Modified")), JsonHelper.FromJson<SpPosition>(www.downloadHandler.text))));
+                    callback(new Response<KeyValuePair<Properties, SpPosition>>(www, new KeyValuePair<Properties, SpPosition>(new Properties(www), JsonHelper.FromJson<SpPosition>(www.downloadHandler.text))));
             }
         }
 
-        public IEnumerator UpdateDivision(UnityAction<Response<DateTime>> callback, UnityAction<float> onUpdate)
+        public IEnumerator UpdateDivision(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate)
         {
             yield return UpdateRequest(callback, onUpdate, APIList.GetDivision());
         }
 
-        public IEnumerator GetDivision(UnityAction<Response<KeyValuePair<DateTime, Division>>> callback, UnityAction<float> onUpdate)
+        public IEnumerator GetDivision(UnityAction<Response<KeyValuePair<Properties, Division>>> callback, UnityAction<float> onUpdate)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetDivision()))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<KeyValuePair<DateTime, Division>>(www, new KeyValuePair<DateTime, Division>(DateTime.Parse(www.GetResponseHeader("Last-Modified")), JsonHelper.FromJson<Division>(www.downloadHandler.text))));
+                    callback(new Response<KeyValuePair<Properties, Division>>(www, new KeyValuePair<Properties, Division>(new Properties(www), JsonHelper.FromJson<Division>(www.downloadHandler.text))));
             }
         }
 
-        public IEnumerator UpdateDivision_Volta(UnityAction<Response<DateTime>> callback, UnityAction<float> onUpdate)
+        public IEnumerator UpdateDivision_Volta(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate)
         {
             yield return UpdateRequest(callback, onUpdate, APIList.GetDivision_Volta());
         }
 
-        public IEnumerator GetDivision_Volta(UnityAction<Response<KeyValuePair<DateTime, Division>>> callback, UnityAction<float> onUpdate)
+        public IEnumerator GetDivision_Volta(UnityAction<Response<KeyValuePair<Properties, Division>>> callback, UnityAction<float> onUpdate)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetDivision_Volta()))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<KeyValuePair<DateTime, Division>>(www, new KeyValuePair<DateTime, Division>(DateTime.Parse(www.GetResponseHeader("Last-Modified")), JsonHelper.FromJson<Division>(www.downloadHandler.text))));
+                    callback(new Response<KeyValuePair<Properties, Division>>(www, new KeyValuePair<Properties, Division>(new Properties(www), JsonHelper.FromJson<Division>(www.downloadHandler.text))));
             }
         }
 
-        public IEnumerator UpdatePlayerActionImageFromSpid(UnityAction<Response<DateTime>> callback, UnityAction<float> onUpdate, int spid)
+        public IEnumerator UpdatePlayerActionImageFromSpid(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate, int spid)
         {
             yield return UpdateRequest(callback, onUpdate, APIList.GetPlayerActionImageFromSpid(spid));
         }
 
-        public IEnumerator GetPlayerActionImageFromSpid(UnityAction<Response<KeyValuePair<DateTime, Sprite>>> callback, UnityAction<float> onUpdate, int spid, string savePath = "")
+        public IEnumerator GetPlayerActionImageFromSpid(UnityAction<Response<KeyValuePair<Properties, Sprite>>> callback, UnityAction<float> onUpdate, int spid, string savePath = "")
         {
             using (UnityWebRequest www = GetRequest(APIList.GetPlayerActionImageFromSpid(spid)))
             {
@@ -182,7 +182,10 @@ namespace FIFA4
                 }
 
                 if (!string.IsNullOrEmpty(savePath))
+                {
                     File.WriteAllBytes(savePath, www.downloadHandler.data);
+
+                }
 
                 if (callback != null)
                 {
@@ -190,7 +193,7 @@ namespace FIFA4
                     texture.LoadImage(www.downloadHandler.data);
                     Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
 
-                    callback(new Response<KeyValuePair<DateTime, Sprite>>(www, new KeyValuePair<DateTime, Sprite>(DateTime.Parse(www.GetResponseHeader("Last-Modified")), sprite)));
+                    callback(new Response<KeyValuePair<Properties, Sprite>>(www, new KeyValuePair<Properties, Sprite>(new Properties(www), sprite)));
                 }
             }
         }
@@ -235,6 +238,16 @@ namespace FIFA4
                 yield return SendRequest(www, onUpdate);
 
                 callback(new Response<DateTime>(www, DateTime.Parse(www.GetResponseHeader("Last-Modified"))));
+            }
+        }
+
+        private IEnumerator UpdateRequest(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate, string url)
+        {
+            using (UnityWebRequest www = HeadRequest(url))
+            {
+                yield return SendRequest(www, onUpdate);
+                
+                callback(new Response<Properties>(www, new Properties(www)));
             }
         }
 

@@ -49,14 +49,15 @@ namespace FIFA4
 
             yield return GameManager.Instance.RequestService.GetUserInformation((response) =>
             {
-                // Login success
+                // Login success.
                 if (!response.isError)
                 {
                     Debug.Log(JsonHelper.ToJson(response.data));
                 }
+                // Login failed.
                 else
                 {
-                    manager.NotificationComponent.Show("닉네임을 찾을 수 없습니다."/*, () => manager.UI.LoginNicknameField.text = ""*/);
+                    manager.NotificationComponent.Show("닉네임을 찾을 수 없습니다.", () => manager.UI.LoginNicknameField.text = "");
                 }
             }, null, GameManager.Instance.UI.LoginNicknameField.text);
 

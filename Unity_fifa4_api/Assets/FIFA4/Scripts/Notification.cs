@@ -7,6 +7,11 @@ namespace FIFA4
 {
     public class Notification : MonoBehaviour
     {
+        private void Start()
+        {
+            GameManager.Instance.UI.NotificationBackgroundImage.gameObject.SetActive(false);
+        }
+
         public void Show(string text, UnityAction callback = null)
         {
             var manager = GameManager.Instance;

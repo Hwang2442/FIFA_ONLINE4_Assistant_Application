@@ -25,7 +25,7 @@ namespace FIFA4
             // Nickname is empty.
             if (string.IsNullOrEmpty(manager.UI.LoginNicknameField.text))
             {
-
+                manager.NotificationComponent.Show("닉네임을 입력해주세요.");
 
                 return;
             }
@@ -52,15 +52,15 @@ namespace FIFA4
                 // Login success
                 if (!response.isError)
                 {
-                    
+                    Debug.Log(JsonHelper.ToJson(response.data));
                 }
                 else
                 {
-
+                    manager.NotificationComponent.Show("닉네임을 찾을 수 없습니다."/*, () => manager.UI.LoginNicknameField.text = ""*/);
                 }
             }, null, GameManager.Instance.UI.LoginNicknameField.text);
 
-            //manager.LoadingComponent.Hide();
+            manager.LoadingComponent.Hide();
         }
     }
 }

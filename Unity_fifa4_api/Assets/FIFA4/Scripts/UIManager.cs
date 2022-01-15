@@ -21,6 +21,11 @@ namespace FIFA4
         [SerializeField] RectTransform m_loadingProgressImage;
         [SerializeField] TextMeshProUGUI m_loadingDescText;
 
+        [Header("Notification UI")]
+        [SerializeField] Image m_notificationBackgroundImage;
+        [SerializeField] TextMeshProUGUI m_notificationText;
+        [SerializeField] Button m_notificationButton;
+
         #endregion
 
         #region Properties
@@ -39,6 +44,14 @@ namespace FIFA4
         public CanvasGroup LoadingCanvas => m_loadingCanvas;
         public RectTransform LoadingProgressImage => m_loadingProgressImage;
         public TextMeshProUGUI LoadingDescriptionText => m_loadingDescText;
+
+        #endregion
+
+        #region Notification
+
+        public Image NotificationBackgroundImage => m_notificationBackgroundImage;
+        public TextMeshProUGUI NotificationText => m_notificationText;
+        public Button NotificationButton => m_notificationButton;
 
         #endregion
 

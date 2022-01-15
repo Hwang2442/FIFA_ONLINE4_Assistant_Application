@@ -37,6 +37,8 @@ namespace FIFA4
             manager.UI.LoadingCanvas.DOFade(0, 0.2f);
 
             manager.UI.LoadingProgressImage.DOKill();
+
+            manager.UI.LoadingDescriptionText.text = "";
         }
     }
 }

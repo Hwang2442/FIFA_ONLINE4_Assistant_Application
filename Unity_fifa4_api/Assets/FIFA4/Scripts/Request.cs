@@ -169,13 +169,13 @@ namespace FIFA4
 
         public IEnumerator GetPlayerActionImageFromSpid(UnityAction<Response<KeyValuePair<Properties, Sprite>>> callback, UnityAction<float> onUpdate, int spid, string savePath = "")
         {
-            using (UnityWebRequest www = GetRequest(APIList.GetPlayerActionImageFromSpid(spid)))
+            using (UnityWebRequest www = ImageRequest(APIList.GetPlayerActionImageFromSpid(spid)))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (www.downloadedBytes <= 0)
                 {
-                    Debug.LogError("Response body is empty!!");
+                    Debug.LogWarning("Response body is empty..");
                     callback(null);
 
                     yield break;
@@ -184,13 +184,12 @@ namespace FIFA4
                 if (!string.IsNullOrEmpty(savePath))
                 {
                     File.WriteAllBytes(savePath, www.downloadHandler.data);
-
+                    File.SetLastWriteTime(savePath, DateTime.Parse(www.GetResponseHeader("Last-Modified")));
                 }
 
                 if (callback != null)
                 {
-                    Texture2D texture = new Texture2D(2, 2);
-                    texture.LoadImage(www.downloadHandler.data);
+                    Texture2D texture = DownloadHandlerTexture.GetContent(www);
                     Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
 
                     callback(new Response<KeyValuePair<Properties, Sprite>>(www, new KeyValuePair<Properties, Sprite>(new Properties(www), sprite)));
@@ -213,6 +212,14 @@ namespace FIFA4
         private UnityWebRequest HeadRequest(string url)
         {
             UnityWebRequest www = UnityWebRequest.Head(new Uri(url).AbsoluteUri);
+            www.SetRequestHeader("Authorization", KeyToken.Key);
+
+            return www;
+        }
+
+        private UnityWebRequest ImageRequest(string url)
+        {
+            UnityWebRequest www = UnityWebRequestTexture.GetTexture(new Uri(url).AbsoluteUri);
             www.SetRequestHeader("Authorization", KeyToken.Key);
 
             return www;

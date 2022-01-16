@@ -22,6 +22,7 @@ namespace FIFA4
             var manager = GameManager.Instance;
 
             manager.UI.LoadingCanvas.blocksRaycasts = true;
+            manager.UI.LoadingCanvas.DOKill();
             manager.UI.LoadingCanvas.DOFade(1, 0.2f).From(0);
             manager.UI.LoadingProgressImage.DOLocalRotate(new Vector3(0, 0, 180), 90, RotateMode.FastBeyond360).SetEase(Ease.Linear).SetLoops(-1, LoopType.Restart).SetSpeedBased(true).From(Vector3.zero);
 

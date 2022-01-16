@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace FIFA4
 {
@@ -49,19 +50,29 @@ namespace FIFA4
 
             yield return GameManager.Instance.RequestService.GetUserInformation((response) =>
             {
-                // Login success.
                 if (!response.isError)
                 {
-                    Debug.Log(JsonHelper.ToJson(response.data));
+                    Debug.Log("Login successed!!");
+
+                    if (!manager.DownloadingComponent.isUpdated)
+                    {
+                        manager.LoadingComponent.Hide();
+                        DOVirtual.DelayedCall(0.2f, ()=> manager.DownloadingComponent.StartCoroutine(manager.DownloadingComponent.DataUpdate()));
+                    }
+                    else
+                    {
+                        Debug.Log("Updated data.");
+                    }
                 }
-                // Login failed.
                 else
                 {
+                    Debug.Log("Login failed..");
+
                     manager.NotificationComponent.Show("닉네임을 찾을 수 없습니다.", () => manager.UI.LoginNicknameField.text = "");
                 }
             }, null, GameManager.Instance.UI.LoginNicknameField.text);
 
-            manager.LoadingComponent.Hide();
+            //manager.LoadingComponent.Hide();
         }
     }
 }

@@ -30,7 +30,7 @@ namespace FIFA4
             this.errorMessage = www.error;
 
             this.url = www.url;
-            this.content = www.downloadHandler.text;
+            //this.content = www.downloadHandler.text;
 
             this.data = data;
         }

@@ -18,6 +18,7 @@ namespace FIFA4
         [Header("Components")]
         [SerializeField] Login m_login;
         [SerializeField] Loading m_loading;
+        [SerializeField] Downloading m_downloading;
         [SerializeField] Notification m_notification;
 
         Request m_request;
@@ -33,7 +34,9 @@ namespace FIFA4
         #region Components
 
         public Login LoginComponent => m_login;
+
         public Loading LoadingComponent => m_loading;
+        public Downloading DownloadingComponent => m_downloading;
 
         public Notification NotificationComponent => m_notification;
 

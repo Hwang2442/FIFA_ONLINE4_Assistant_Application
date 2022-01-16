@@ -103,14 +103,14 @@ namespace FIFA4
             yield return UpdateRequest(callback, onUpdate, APIList.GetSeasonId());
         }
 
-        public IEnumerator GetSeasonId(UnityAction<Response<KeyValuePair<Properties, SeasonId>>> callback, UnityAction<float> onUpdate)
+        public IEnumerator GetSeasonId(UnityAction<Response<KeyValuePair<Properties, SeasonId[]>>> callback, UnityAction<float> onUpdate)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetSeasonId()))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<KeyValuePair<Properties, SeasonId>>(www, new KeyValuePair<Properties, SeasonId>(new Properties(www), JsonHelper.FromJson<SeasonId>(www.downloadHandler.text))));
+                    callback(new Response<KeyValuePair<Properties, SeasonId[]>>(www, new KeyValuePair<Properties, SeasonId[]>(new Properties(www), JsonHelper.FromJson<SeasonId[]>(www.downloadHandler.text))));
             }
         }
 
@@ -119,14 +119,14 @@ namespace FIFA4
             yield return UpdateRequest(callback, onUpdate, APIList.GetSpposition());
         }
 
-        public IEnumerator GetSpPosition(UnityAction<Response<KeyValuePair<Properties, SpPosition>>> callback, UnityAction<float> onUpdate)
+        public IEnumerator GetSpPosition(UnityAction<Response<KeyValuePair<Properties, SpPosition[]>>> callback, UnityAction<float> onUpdate)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetSpposition()))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<KeyValuePair<Properties, SpPosition>>(www, new KeyValuePair<Properties, SpPosition>(new Properties(www), JsonHelper.FromJson<SpPosition>(www.downloadHandler.text))));
+                    callback(new Response<KeyValuePair<Properties, SpPosition[]>>(www, new KeyValuePair<Properties, SpPosition[]>(new Properties(www), JsonHelper.FromJson<SpPosition[]>(www.downloadHandler.text))));
             }
         }
 
@@ -135,14 +135,14 @@ namespace FIFA4
             yield return UpdateRequest(callback, onUpdate, APIList.GetDivision());
         }
 
-        public IEnumerator GetDivision(UnityAction<Response<KeyValuePair<Properties, Division>>> callback, UnityAction<float> onUpdate)
+        public IEnumerator GetDivision(UnityAction<Response<KeyValuePair<Properties, Division[]>>> callback, UnityAction<float> onUpdate)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetDivision()))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<KeyValuePair<Properties, Division>>(www, new KeyValuePair<Properties, Division>(new Properties(www), JsonHelper.FromJson<Division>(www.downloadHandler.text))));
+                    callback(new Response<KeyValuePair<Properties, Division[]>>(www, new KeyValuePair<Properties, Division[]>(new Properties(www), JsonHelper.FromJson<Division[]>(www.downloadHandler.text))));
             }
         }
 
@@ -151,14 +151,14 @@ namespace FIFA4
             yield return UpdateRequest(callback, onUpdate, APIList.GetDivision_Volta());
         }
 
-        public IEnumerator GetDivision_Volta(UnityAction<Response<KeyValuePair<Properties, Division>>> callback, UnityAction<float> onUpdate)
+        public IEnumerator GetDivision_Volta(UnityAction<Response<KeyValuePair<Properties, Division[]>>> callback, UnityAction<float> onUpdate)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetDivision_Volta()))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<KeyValuePair<Properties, Division>>(www, new KeyValuePair<Properties, Division>(new Properties(www), JsonHelper.FromJson<Division>(www.downloadHandler.text))));
+                    callback(new Response<KeyValuePair<Properties, Division[]>>(www, new KeyValuePair<Properties, Division[]>(new Properties(www), JsonHelper.FromJson<Division[]>(www.downloadHandler.text))));
             }
         }
 
@@ -244,7 +244,8 @@ namespace FIFA4
             {
                 yield return SendRequest(www, onUpdate);
 
-                callback(new Response<DateTime>(www, DateTime.Parse(www.GetResponseHeader("Last-Modified"))));
+                if (callback != null)
+                    callback(new Response<DateTime>(www, DateTime.Parse(www.GetResponseHeader("Last-Modified"))));
             }
         }
 
@@ -253,8 +254,9 @@ namespace FIFA4
             using (UnityWebRequest www = HeadRequest(url))
             {
                 yield return SendRequest(www, onUpdate);
-                
-                callback(new Response<Properties>(www, new Properties(www)));
+
+                if (callback != null)
+                    callback(new Response<Properties>(www, new Properties(www)));
             }
         }
 

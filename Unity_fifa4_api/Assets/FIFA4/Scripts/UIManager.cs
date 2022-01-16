@@ -21,6 +21,13 @@ namespace FIFA4
         [SerializeField] RectTransform m_loadingProgressImage;
         [SerializeField] TextMeshProUGUI m_loadingDescText;
 
+        [Header("Downloading UI")]
+        [SerializeField] CanvasGroup m_downloadingCanvas;
+        [SerializeField] Image m_downloadingGaugeImage;
+        [SerializeField] TextMeshProUGUI m_downloadingPerText;
+        [SerializeField] Image m_downloadingPanel;
+        [SerializeField] TextMeshProUGUI m_downloadingDescText;
+
         [Header("Notification UI")]
         [SerializeField] Image m_notificationBackgroundImage;
         [SerializeField] TextMeshProUGUI m_notificationText;
@@ -44,6 +51,16 @@ namespace FIFA4
         public CanvasGroup LoadingCanvas => m_loadingCanvas;
         public RectTransform LoadingProgressImage => m_loadingProgressImage;
         public TextMeshProUGUI LoadingDescriptionText => m_loadingDescText;
+
+        #endregion
+
+        #region Downloading
+
+        public CanvasGroup DownloadingCanvas => m_downloadingCanvas;
+        public Image DownloadingGaugeImage => m_downloadingGaugeImage;
+        public TextMeshProUGUI DownloadingPerText => m_downloadingPerText;
+        public Image DownloadingPanel => m_downloadingPanel;
+        public TextMeshProUGUI DownloadingDescText => m_downloadingDescText;
 
         #endregion
 

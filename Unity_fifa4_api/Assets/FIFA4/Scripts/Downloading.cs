@@ -124,27 +124,6 @@ namespace FIFA4
                     }
                 }
             }, null);
-            yield return manager.RequestService.UpdateSpid((response) =>
-            { 
-                if (!response.isError)
-                {
-                    string path = Path.Combine(directory, "spid.json");
-
-                    if (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path))
-                    {
-                        Debug.Log("Need update : " + path);
-
-                        length += response.data.length;
-                        m_requestList.Add(manager.RequestService.GetSpid((response_spid) =>
-                        {
-                            JsonHelper.SaveJson(response_spid.data.Value, path);
-                            File.SetLastWriteTime(path, response_spid.data.Key.dateTime);
-
-                            Debug.Log("Downloaded data : " + path);
-                        }, UpdatePercentage));
-                    }
-                }
-            }, null);
             yield return manager.RequestService.UpdateSpPosition((response) =>
             {
                 if (!response.isError)
@@ -166,18 +145,41 @@ namespace FIFA4
                     }
                 }
             }, null);
+            yield return manager.RequestService.UpdateSpid((response) =>
+            { 
+                if (!response.isError)
+                {
+                    string path = Path.Combine(directory, "spid.json");
+
+                    if (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path))
+                    {
+                        Debug.Log("Need update : " + path);
+
+                        length += response.data.length;
+                        m_requestList.Add(manager.RequestService.GetSpid((response_spid) =>
+                        {
+                            JsonHelper.SaveJson(response_spid.data.Value, path);
+                            File.SetLastWriteTime(path, response_spid.data.Key.dateTime);
+
+                            Debug.Log("Downloaded data : " + path);
+                        }, UpdatePercentage));
+                    }
+                }
+            }, null);
 
             yield return new WaitForSeconds(0.5f);
 
             if (length > 0)
             {
-                Debug.Log(length);
-
                 manager.LoadingComponent.Hide();
 
                 Show();
                 manager.UI.DownloadingPanel.gameObject.SetActive(true);
-                manager.UI.DownloadingDescText.text = string.Format("{0}MB의 추가 데이터가 있습니다.\n\n업데이트를 진행하시겠습니까?", length / (1024 * 1024));
+                manager.UI.DownloadingDescText.text = string.Format("{0}MB의 추가 데이터가 있습니다.\n\n업데이트를 진행하시겠습니까?", Mathf.Round(length / (float)(1024 * 1024) * 10) * 0.1f);
+            }
+            else
+            {
+
             }
         }
 
@@ -190,17 +192,15 @@ namespace FIFA4
                 yield return StartCoroutine(request);
             }
 
-            yield return null;
+            yield return new WaitForSeconds(0.5f);
         }
 
         private void UpdatePercentage(float val)
         {
             var manager = GameManager.Instance;
 
-            //manager.UI.DownloadingGaugeImage.fillAmount += val / m_requestList.Count;
-            //Debug.Log(manager.UI.DownloadingGaugeImage.fillAmount);
-            manager.UI.DownloadingGaugeImage.fillAmount = val;
-            Debug.Log(val);
+            manager.UI.DownloadingGaugeImage.fillAmount += val / m_requestList.Count;
+            manager.UI.DownloadingPerText.text = string.Format("{0}%", Mathf.FloorToInt(manager.UI.DownloadingGaugeImage.fillAmount * 100));
         }
 
         public void Show()

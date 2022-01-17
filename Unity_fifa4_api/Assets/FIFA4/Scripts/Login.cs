@@ -17,6 +17,8 @@ namespace FIFA4
 
             manager.UI.LoginRememberToggle.isOn = PlayerPrefs.GetInt(rememberMePrefsKey, 0) == 1;   // Toggle.
             manager.UI.LoginNicknameField.text = PlayerPrefs.GetString(nicknamePrefsKey, "");       // Input field.
+
+            manager.UI.LoginCanvas.alpha = 1;
         }
 
         public void OnClickLogin()

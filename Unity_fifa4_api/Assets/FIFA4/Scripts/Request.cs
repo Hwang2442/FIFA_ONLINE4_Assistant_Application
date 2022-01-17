@@ -234,7 +234,7 @@ namespace FIFA4
                 if (onUpdate != null)
                     onUpdate(www.downloadProgress);
 
-                yield return null;
+                yield return new WaitForEndOfFrame();
             }
         }
 

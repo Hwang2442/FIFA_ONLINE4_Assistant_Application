@@ -12,6 +12,7 @@ namespace FIFA4
 
         [Header("Login UI")]
         [SerializeField] CanvasGroup m_loginCanvas;
+        [SerializeField] Image m_loginPanel;
         [SerializeField] TMP_InputField m_loginNicknameField;
         [SerializeField] Toggle m_loginRememberToggle;
         [SerializeField] Button m_loginButton;
@@ -48,6 +49,7 @@ namespace FIFA4
         #region Login
 
         public CanvasGroup LoginCanvas => m_loginCanvas;
+        public Image LoginPanel => m_loginPanel;
         public TMP_InputField LoginNicknameField => m_loginNicknameField;
         public Toggle LoginRememberToggle => m_loginRememberToggle;
         public Button LoginButton => m_loginButton;

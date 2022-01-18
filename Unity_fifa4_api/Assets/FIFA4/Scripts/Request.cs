@@ -183,6 +183,9 @@ namespace FIFA4
 
                 if (!string.IsNullOrEmpty(savePath) && !File.Exists(savePath))
                 {
+                    if (!Directory.Exists(Path.GetDirectoryName(savePath)))
+                        Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+
                     File.WriteAllBytes(savePath, www.downloadHandler.data);
                     File.SetLastWriteTime(savePath, DateTime.Parse(www.GetResponseHeader("Last-Modified")));
                 }

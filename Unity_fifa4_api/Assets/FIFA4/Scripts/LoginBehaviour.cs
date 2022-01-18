@@ -21,6 +21,11 @@ namespace FIFA4
             manager.UI.LoginCanvas.alpha = 1;
         }
 
+        public Tween Hide()
+        {
+            return GameManager.Instance.UI.LoginPanel.rectTransform.DOScale(0, 0.5f).From(1).SetEase(Ease.InOutQuad);
+        }
+
         public void OnClickLogin()
         {
             var manager = GameManager.Instance;
@@ -65,6 +70,8 @@ namespace FIFA4
                     else
                     {
                         Debug.Log("Updated data.");
+
+                        Hide();
                     }
                 }
                 else

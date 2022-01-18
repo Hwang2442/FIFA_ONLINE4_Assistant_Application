@@ -49,6 +49,9 @@ namespace FIFA4
 
         public Properties(UnityWebRequest www)
         {
+            if (www.isNetworkError || www.isHttpError)
+                return;
+
             this.length = ulong.Parse(www.GetResponseHeader("Content-Length"));
             this.dateTime = DateTime.Parse(www.GetResponseHeader("Last-Modified"));
         }

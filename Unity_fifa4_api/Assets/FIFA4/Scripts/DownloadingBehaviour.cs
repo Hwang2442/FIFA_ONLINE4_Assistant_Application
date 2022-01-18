@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 namespace FIFA4
 {
@@ -165,6 +166,10 @@ namespace FIFA4
                             Debug.Log("Downloaded data : " + path);
                         }, UpdatePercentage));
                     }
+                    else
+                    {
+                        manager.Spid = JsonHelper.LoadJson<Spid[]>(path);
+                    }
                 }
             }, null);
 
@@ -180,7 +185,13 @@ namespace FIFA4
             }
             else
             {
+                Hide();
+                manager.Loading.Hide();
 
+                yield return manager.Login.Hide().WaitForKill();
+
+                manager.Main.Show();
+                manager.Main.SetUserInformation(GameManager.Instance.UserInformation);
             }
         }
 
@@ -194,6 +205,12 @@ namespace FIFA4
             }
 
             yield return new WaitForSeconds(0.5f);
+
+            Hide();
+            yield return GameManager.Instance.Login.Hide().WaitForKill();
+
+            GameManager.Instance.Main.Show();
+            GameManager.Instance.Main.SetUserInformation(GameManager.Instance.UserInformation);
         }
 
         private void UpdatePercentage(float val)
@@ -210,6 +227,14 @@ namespace FIFA4
 
             manager.UI.DownloadingCanvas.alpha = 1;
             manager.UI.DownloadingCanvas.blocksRaycasts = true;
+        }
+
+        public void Hide()
+        {
+            var manager = GameManager.Instance;
+
+            manager.UI.DownloadingCanvas.alpha = 0;
+            manager.UI.DownloadingCanvas.blocksRaycasts = false;
         }
 
         public void OnClickDownload_OK()

@@ -14,6 +14,7 @@ namespace FIFA4
         [SerializeField] UIManager m_ui;
 
         [Header("Behaviours")]
+        [SerializeField] MainBehaviour m_main;
         [SerializeField] LoginBehaviour m_login;
         [SerializeField] LoadingBehaviour m_loading;
         [SerializeField] DownloadingBehaviour m_downloading;
@@ -34,6 +35,8 @@ namespace FIFA4
         public UIManager UI => m_ui;
 
         #region Behaviours
+
+        public MainBehaviour Main => m_main;
 
         public LoginBehaviour Login => m_login;
 

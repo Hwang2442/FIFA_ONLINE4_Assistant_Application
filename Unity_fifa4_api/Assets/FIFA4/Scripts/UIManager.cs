@@ -16,6 +16,14 @@ namespace FIFA4
         [SerializeField] Toggle m_loginRememberToggle;
         [SerializeField] Button m_loginButton;
 
+        [Header("Main UI")]
+        [SerializeField] CanvasGroup m_mainCanvas;
+        [SerializeField] Image m_userInformationPanel;
+        [SerializeField] Image m_portraitImage;
+        [SerializeField] TextMeshProUGUI m_nicknameText;
+        [SerializeField] TextMeshProUGUI m_levelText;
+        [SerializeField] ScrollRect m_highestGradeEverScroll;
+
         [Header("Loading UI")]
         [SerializeField] CanvasGroup m_loadingCanvas;
         [SerializeField] RectTransform m_loadingProgressImage;
@@ -43,6 +51,17 @@ namespace FIFA4
         public TMP_InputField LoginNicknameField => m_loginNicknameField;
         public Toggle LoginRememberToggle => m_loginRememberToggle;
         public Button LoginButton => m_loginButton;
+
+        #endregion
+
+        #region Main
+
+        public CanvasGroup MainCanvas => m_mainCanvas;
+        public Image UserInformationPanel => m_userInformationPanel;
+        public Image PortraitImage => m_portraitImage;
+        public TextMeshProUGUI NicknameText => m_nicknameText;
+        public TextMeshProUGUI LevelText => m_levelText;
+        public ScrollRect HighestGradeEverScroll => m_highestGradeEverScroll;
 
         #endregion
 

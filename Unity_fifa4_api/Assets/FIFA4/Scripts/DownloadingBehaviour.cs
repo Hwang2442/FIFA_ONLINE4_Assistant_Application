@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FIFA4
 {
-    public class Downloading : MonoBehaviour
+    public class DownloadingBehaviour : MonoBehaviour
     {
         public bool isUpdated = false;
 
@@ -33,18 +33,17 @@ namespace FIFA4
             var manager = GameManager.Instance;
 
             ulong length = 0;
-            string directory = Path.Combine(Application.persistentDataPath, "MetaInformations");
 
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            if (!Directory.Exists(PathList.MetaDataPath))
+                Directory.CreateDirectory(PathList.MetaDataPath);
 
-            manager.LoadingComponent.Show("데이터를 확인중입니다...");
+            manager.Loading.Show("데이터를 확인중입니다...");
 
             yield return manager.RequestService.UpdateDivision((response) =>
             {
                 if (!response.isError)
                 {
-                    string path = Path.Combine(directory, "division.json");
+                    string path = PathList.DivisionPath;
 
                     if (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path))
                     {
@@ -65,7 +64,7 @@ namespace FIFA4
             {
                 if (!response.isError)
                 {
-                    string path = Path.Combine(directory, "division_volta.json");
+                    string path = PathList.Division_VoltaPath;
 
                     if (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path))
                     {
@@ -86,7 +85,7 @@ namespace FIFA4
             {
                 if (!response.isError)
                 {
-                    string path = Path.Combine(directory, "matchtype.json");
+                    string path = PathList.MatchTypePath;
 
                     if (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path))
                     {
@@ -107,7 +106,7 @@ namespace FIFA4
             {
                 if (!response.isError)
                 {
-                    string path = Path.Combine(directory, "seasonid.json");
+                    string path = PathList.SeasonidPath;
 
                     if (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path))
                     {
@@ -128,7 +127,7 @@ namespace FIFA4
             {
                 if (!response.isError)
                 {
-                    string path = Path.Combine(directory, "spposition.json");
+                    string path = PathList.SpposionPath;
 
                     if (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path))
                     {
@@ -149,7 +148,7 @@ namespace FIFA4
             { 
                 if (!response.isError)
                 {
-                    string path = Path.Combine(directory, "spid.json");
+                    string path = PathList.SpidPath;
 
                     if (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path))
                     {
@@ -161,6 +160,8 @@ namespace FIFA4
                             JsonHelper.SaveJson(response_spid.data.Value, path);
                             File.SetLastWriteTime(path, response_spid.data.Key.dateTime);
 
+                            manager.Spid = response_spid.data.Value;
+
                             Debug.Log("Downloaded data : " + path);
                         }, UpdatePercentage));
                     }
@@ -171,7 +172,7 @@ namespace FIFA4
 
             if (length > 0)
             {
-                manager.LoadingComponent.Hide();
+                manager.Loading.Hide();
 
                 Show();
                 manager.UI.DownloadingPanel.gameObject.SetActive(true);

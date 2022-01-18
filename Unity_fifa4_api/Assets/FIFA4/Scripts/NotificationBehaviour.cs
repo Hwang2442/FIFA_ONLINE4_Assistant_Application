@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace FIFA4
 {
-    public class Notification : MonoBehaviour
+    public class NotificationBehaviour : MonoBehaviour
     {
         public void Show(string text, UnityAction callback = null)
         {

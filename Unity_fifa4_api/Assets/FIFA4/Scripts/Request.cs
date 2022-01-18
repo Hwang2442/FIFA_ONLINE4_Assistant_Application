@@ -181,7 +181,7 @@ namespace FIFA4
                     yield break;
                 }
 
-                if (!string.IsNullOrEmpty(savePath))
+                if (!string.IsNullOrEmpty(savePath) && !File.Exists(savePath))
                 {
                     File.WriteAllBytes(savePath, www.downloadHandler.data);
                     File.SetLastWriteTime(savePath, DateTime.Parse(www.GetResponseHeader("Last-Modified")));

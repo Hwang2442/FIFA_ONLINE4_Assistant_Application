@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -9,17 +10,18 @@ namespace FIFA4
     {
         #region Variables
 
-        [Header("User information")]
-        [SerializeField] UserInformation m_userInformation;
-
         [Header("UI")]
         [SerializeField] UIManager m_ui;
 
-        [Header("Components")]
-        [SerializeField] Login m_login;
-        [SerializeField] Loading m_loading;
-        [SerializeField] Downloading m_downloading;
-        [SerializeField] Notification m_notification;
+        [Header("Behaviours")]
+        [SerializeField] LoginBehaviour m_login;
+        [SerializeField] LoadingBehaviour m_loading;
+        [SerializeField] DownloadingBehaviour m_downloading;
+        [SerializeField] NotificationBehaviour m_notification;
+
+        [Header("Informations")]
+        [SerializeField] UserInformation m_user;
+        [SerializeField] Spid[] m_spid;
 
         Request m_request;
 
@@ -31,20 +33,30 @@ namespace FIFA4
 
         public UIManager UI => m_ui;
 
-        #region Components
+        #region Behaviours
 
-        public Login LoginComponent => m_login;
+        public LoginBehaviour Login => m_login;
 
-        public Loading LoadingComponent => m_loading;
-        public Downloading DownloadingComponent => m_downloading;
+        public LoadingBehaviour Loading => m_loading;
+        public DownloadingBehaviour Downloading => m_downloading;
 
-        public Notification NotificationComponent => m_notification;
+        public NotificationBehaviour Notification => m_notification;
 
         #endregion
 
         public Request RequestService => m_request;
 
-        public UserInformation UserInformation => m_userInformation;
+        public UserInformation UserInformation 
+        {
+            get => m_user;
+            set => m_user = value;
+        }
+
+        public Spid[] Spid
+        {
+            get => m_spid;
+            set => m_spid = value;
+        }
 
         #endregion
 
@@ -53,11 +65,6 @@ namespace FIFA4
             Instance = this;
 
             m_request = new Request();
-        }
-
-        public void SetUserInformation()
-        {
-
         }
     }
 }

@@ -7,7 +7,7 @@ using TMPro;
 
 namespace FIFA4
 {
-    public class Loading : MonoBehaviour
+    public class LoadingBehaviour : MonoBehaviour
     {
         private void Start()
         {

@@ -6,7 +6,7 @@ using DG.Tweening;
 
 namespace FIFA4
 {
-    public class Login : MonoBehaviour
+    public class LoginBehaviour : MonoBehaviour
     {
         const string rememberMePrefsKey = "Remember me";
         const string nicknamePrefsKey = "Nickname";
@@ -28,7 +28,7 @@ namespace FIFA4
             // Nickname is empty.
             if (string.IsNullOrEmpty(manager.UI.LoginNicknameField.text))
             {
-                manager.NotificationComponent.Show("닉네임을 입력해주세요.");
+                manager.Notification.Show("닉네임을 입력해주세요.");
 
                 return;
             }
@@ -48,7 +48,7 @@ namespace FIFA4
         {
             var manager = GameManager.Instance;
 
-            manager.LoadingComponent.Show("로그인 중입니다...");
+            manager.Loading.Show("로그인 중입니다...");
 
             yield return GameManager.Instance.RequestService.GetUserInformation((response) =>
             {
@@ -56,10 +56,11 @@ namespace FIFA4
                 {
                     Debug.Log("Login successed!!");
 
-                    if (!manager.DownloadingComponent.isUpdated)
+                    manager.UserInformation = response.data;
+
+                    if (!manager.Downloading.isUpdated)
                     {
-                        manager.LoadingComponent.Hide();
-                        DOVirtual.DelayedCall(0.2f, ()=> manager.DownloadingComponent.StartCoroutine(manager.DownloadingComponent.DataUpdate()));
+                        DOVirtual.DelayedCall(0.2f, ()=> manager.Downloading.StartCoroutine(manager.Downloading.DataUpdate()));
                     }
                     else
                     {
@@ -70,11 +71,11 @@ namespace FIFA4
                 {
                     Debug.Log("Login failed..");
 
-                    manager.NotificationComponent.Show("닉네임을 찾을 수 없습니다.", () => manager.UI.LoginNicknameField.text = "");
+                    manager.Notification.Show("닉네임을 찾을 수 없습니다.", () => manager.UI.LoginNicknameField.text = "");
                 }
             }, null, GameManager.Instance.UI.LoginNicknameField.text);
 
-            //manager.LoadingComponent.Hide();
+            manager.Loading.Hide();
         }
     }
 }

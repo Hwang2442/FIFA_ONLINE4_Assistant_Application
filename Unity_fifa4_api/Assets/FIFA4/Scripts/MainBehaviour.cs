@@ -51,33 +51,27 @@ namespace FIFA4
         private IEnumerator Co_SetIcon()
         {
             var manager = GameManager.Instance;
-            bool exist = true;
-
             Spid spid = manager.Spid[Random.Range(0, manager.Spid.Length)];
 
             Debug.Log(spid.id);
+            Debug.Log(spid.name);
 
-            yield return manager.RequestService.UpdatePlayerActionImageFromSpid((response) =>
+            manager.UI.PortraitImage.DOFade(0, 0);
+            manager.UI.PortraitImage.sprite = null;
+            manager.UI.PlayerNameText.text = "";
+
+            yield return manager.RequestService.GetPlayerImage(this, (response) => manager.UI.PortraitImage.sprite = response.data.Value, (response) => manager.UI.PortraitImage.sprite = response.data, spid.id);
+            yield return null;
+
+            if (manager.UI.PortraitImage.sprite == null)
             {
-                if (!response.isError)
-                {
-                    string path = PathList.GetPlayersActionImagePath(spid.id);
-
-                    if (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path))
-                    {
-                        StartCoroutine(manager.RequestService.GetPlayerActionImageFromSpid((response_sprite) =>
-                        {
-                            manager.UI.PortraitImage.sprite = response_sprite.data.Value;
-                            manager.UI.PortraitImage.DOKill();
-                            manager.UI.PortraitImage.DOFade(1, 0.2f).From(0);
-                        }, null, spid.id, path));
-                    }
-                }
-                else
-                {
-
-                }
-            }, null, spid.id);
+                StartCoroutine(Co_SetIcon());
+            }
+            else
+            {
+                manager.UI.PortraitImage.DOFade(1, 0.2f).From(0);
+                manager.UI.PlayerNameText.DOText(spid.name, 0.2f).From("");
+            }
         }
 
         private IEnumerator Co_SetHighestGradeEver()

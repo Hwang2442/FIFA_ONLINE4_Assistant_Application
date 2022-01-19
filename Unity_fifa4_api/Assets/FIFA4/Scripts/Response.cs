@@ -52,6 +52,9 @@ namespace FIFA4
             if (www.isNetworkError || www.isHttpError)
                 return;
 
+            if (www.GetResponseHeader("Content-Length") == null || www.GetResponseHeader("Last-Modified") == null)
+                return;
+
             this.length = ulong.Parse(www.GetResponseHeader("Content-Length"));
             this.dateTime = DateTime.Parse(www.GetResponseHeader("Last-Modified"));
         }

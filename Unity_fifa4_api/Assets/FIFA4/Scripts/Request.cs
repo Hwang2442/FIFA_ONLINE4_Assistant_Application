@@ -200,6 +200,174 @@ namespace FIFA4
             }
         }
 
+        public IEnumerator UpdatePlayerActionImageFromPid(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate, int spid)
+        {
+            yield return UpdateRequest(callback, onUpdate, APIList.GetPlayerActionImageFromPid(spid % 1000000));
+        }
+
+        public IEnumerator GetPlayerActionImageFromPid(UnityAction<Response<KeyValuePair<Properties, Sprite>>> callback, UnityAction<float> onUpdate, int spid, string savePath = "")
+        {
+            using (UnityWebRequest www = ImageRequest(APIList.GetPlayerActionImageFromSpid(spid % 1000000)))
+            {
+                yield return SendRequest(www, onUpdate);
+
+                if (www.downloadedBytes <= 0)
+                {
+                    Debug.LogWarning("Response body is empty..");
+                    callback(null);
+
+                    yield break;
+                }
+
+                if (!string.IsNullOrEmpty(savePath) && !File.Exists(savePath))
+                {
+                    if (!Directory.Exists(Path.GetDirectoryName(savePath)))
+                        Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+
+                    File.WriteAllBytes(savePath, www.downloadHandler.data);
+                    File.SetLastWriteTime(savePath, DateTime.Parse(www.GetResponseHeader("Last-Modified")));
+                }
+
+                if (callback != null)
+                {
+                    Texture2D texture = DownloadHandlerTexture.GetContent(www);
+                    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+                    callback(new Response<KeyValuePair<Properties, Sprite>>(www, new KeyValuePair<Properties, Sprite>(new Properties(www), sprite)));
+                }
+            }
+        }
+
+        public IEnumerator UpdatePlayerImageFromSpid(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate, int spid)
+        {
+            yield return UpdateRequest(callback, onUpdate, APIList.GetPlayerImageFromSpid(spid));
+        }
+
+        public IEnumerator GetPlayerImageFromSpid(UnityAction<Response<KeyValuePair<Properties, Sprite>>> callback, UnityAction<float> onUpdate, int spid, string savePath = "")
+        {
+            using (UnityWebRequest www = ImageRequest(APIList.GetPlayerImageFromSpid(spid)))
+            {
+                yield return SendRequest(www, onUpdate);
+
+                if (www.downloadedBytes <= 0)
+                {
+                    Debug.LogWarning("Response body is empty..");
+                    callback(null);
+
+                    yield break;
+                }
+
+                if (!string.IsNullOrEmpty(savePath) && !File.Exists(savePath))
+                {
+                    if (!Directory.Exists(Path.GetDirectoryName(savePath)))
+                        Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+
+                    File.WriteAllBytes(savePath, www.downloadHandler.data);
+                    File.SetLastWriteTime(savePath, DateTime.Parse(www.GetResponseHeader("Last-Modified")));
+                }
+
+                if (callback != null)
+                {
+                    Texture2D texture = DownloadHandlerTexture.GetContent(www);
+                    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+                    callback(new Response<KeyValuePair<Properties, Sprite>>(www, new KeyValuePair<Properties, Sprite>(new Properties(www), sprite)));
+                }
+            }
+        }
+
+        public IEnumerator UpdatePlayerImageFromPid(UnityAction<Response<Properties>> callback, UnityAction<float> onUpdate, int spid)
+        {
+            yield return UpdateRequest(callback, onUpdate, APIList.GetPlayerImageFromPid(spid % 1000000));
+        }
+
+        public IEnumerator GetPlayerImageFromPid(UnityAction<Response<KeyValuePair<Properties, Sprite>>> callback, UnityAction<float> onUpdate, int spid, string savePath = "")
+        {
+            using (UnityWebRequest www = ImageRequest(APIList.GetPlayerImageFromPid(spid % 1000000)))
+            {
+                yield return SendRequest(www, onUpdate);
+
+                if (www.downloadedBytes <= 0)
+                {
+                    Debug.LogWarning("Response body is empty..");
+                    callback(null);
+
+                    yield break;
+                }
+
+                if (!string.IsNullOrEmpty(savePath))
+                {
+                    if (!Directory.Exists(Path.GetDirectoryName(savePath)))
+                        Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+
+                    File.WriteAllBytes(savePath, www.downloadHandler.data);
+                    File.SetLastWriteTime(savePath, DateTime.Parse(www.GetResponseHeader("Last-Modified")));
+                }
+
+                if (callback != null)
+                {
+                    Texture2D texture = DownloadHandlerTexture.GetContent(www);
+                    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
+                    callback(new Response<KeyValuePair<Properties, Sprite>>(www, new KeyValuePair<Properties, Sprite>(new Properties(www), sprite)));
+                }
+            }
+        }
+
+        public IEnumerator GetPlayerImage(MonoBehaviour sender, UnityAction<Response<KeyValuePair<Properties, Sprite>>> remoteCallback, UnityAction<Response<Sprite>> localCallback, int spid)
+        {
+            bool isComplete = false;
+
+            yield return UpdatePlayerActionImageFromSpid((response) =>
+            {
+                if (response.isError)
+                    return;
+
+                isComplete = true;
+                string path = PathList.GetPlayersActionImagePath(spid);
+                sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerActionImageFromSpid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
+            }, null, spid);
+
+            if (isComplete)
+                yield break;
+
+            yield return UpdatePlayerActionImageFromPid((response) =>
+            {
+                if (response.isError)
+                    return;
+
+                isComplete = true;
+                string path = PathList.GetPlayersActionImagePath(spid % 1000000);
+                sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerActionImageFromPid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
+            }, null, spid);
+
+            if (isComplete)
+                yield break;
+
+            yield return UpdatePlayerImageFromSpid((response) =>
+            {
+                if (response.isError)
+                    return;
+
+                isComplete = true;
+                string path = PathList.GetPlayerImagePath(spid);
+                sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerImageFromSpid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
+            }, null, spid);
+
+            if (isComplete)
+                yield break;
+
+            yield return UpdatePlayerImageFromSpid((response) =>
+            {
+                if (response.isError)
+                    return;
+
+                isComplete = true;
+                string path = PathList.GetPlayerImagePath(spid % 1000000);
+                sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerImageFromPid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
+            }, null, spid);
+        }
+
         #endregion
 
         #region UnityWebRequest utilities
@@ -265,7 +433,7 @@ namespace FIFA4
 
         #endregion
 
-        public IEnumerator GetImage(UnityAction<Response<Sprite>> callback, UnityAction<float> onUpdate, string resourcesPath, string savePath = "")
+        public IEnumerator GetImage(UnityAction<Response<Sprite>> callback, UnityAction<float> onUpdate, string resourcesPath)
         {
             using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(new Uri(resourcesPath).AbsoluteUri))
             {
@@ -273,9 +441,6 @@ namespace FIFA4
 
                 Texture2D texture = DownloadHandlerTexture.GetContent(www);
                 callback(new Response<Sprite>(www, Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f))));
-
-                if (!string.IsNullOrEmpty(savePath))
-                    File.WriteAllBytes(savePath, www.downloadHandler.data);
             }
         }
     }

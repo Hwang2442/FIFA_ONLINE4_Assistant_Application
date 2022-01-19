@@ -21,6 +21,9 @@ namespace FIFA4
         [SerializeField] CanvasGroup m_mainCanvas;
         [SerializeField] Image m_userInformationPanel;
         [SerializeField] Image m_portraitImage;
+        [SerializeField] Image m_seasonImage;
+        [SerializeField] TextMeshProUGUI m_playerNameText;
+        [SerializeField] Button m_reloadingButton;
         [SerializeField] TextMeshProUGUI m_nicknameText;
         [SerializeField] TextMeshProUGUI m_levelText;
         [SerializeField] ScrollRect m_highestGradeEverScroll;
@@ -61,6 +64,9 @@ namespace FIFA4
         public CanvasGroup MainCanvas => m_mainCanvas;
         public Image UserInformationPanel => m_userInformationPanel;
         public Image PortraitImage => m_portraitImage;
+        public Image SeasonImage => m_seasonImage;
+        public TextMeshProUGUI PlayerNameText => m_playerNameText;
+        public Button ReloadingButton => m_reloadingButton;
         public TextMeshProUGUI NicknameText => m_nicknameText;
         public TextMeshProUGUI LevelText => m_levelText;
         public ScrollRect HighestGradeEverScroll => m_highestGradeEverScroll;

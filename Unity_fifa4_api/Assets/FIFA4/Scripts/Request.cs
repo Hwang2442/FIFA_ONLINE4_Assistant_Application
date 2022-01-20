@@ -368,6 +368,43 @@ namespace FIFA4
             }, null, spid);
         }
 
+        public IEnumerator GetSeasonImageFromSpid(UnityAction<Response<Sprite>> callback, int spid)
+        {
+            yield return GetSeasonImage(callback, spid / 1000000);
+        }
+
+        public IEnumerator GetSeasonImage(UnityAction<Response<Sprite>> callback, int seasonid)
+        {
+            bool isRemote = false;
+            SeasonId[] seasonidArray = JsonHelper.LoadJson<SeasonId[]>(PathList.SeasonidPath);
+
+            for (int i = 0; i < seasonidArray.Length; i++)
+            {
+                if (seasonidArray[i].seasonId != seasonid)
+                    continue;
+
+                DateTime dateTime;
+                string path;
+
+                using (UnityWebRequest www = HeadRequest(seasonidArray[i].seasonImgUrl))
+                {
+                    yield return www.SendWebRequest();
+
+                    dateTime = DateTime.Parse(www.GetResponseHeader("Last-Modified"));
+                    path = Path.Combine(Application.persistentDataPath, "season", Path.GetFileName(www.url));
+
+                    if (!Directory.Exists(Path.GetDirectoryName(path)))
+                        Directory.CreateDirectory(Path.GetDirectoryName(path));
+
+                    isRemote = !File.Exists(path) || dateTime != File.GetLastWriteTime(path);
+
+                    yield return GetImage(callback, null, isRemote ? seasonidArray[i].seasonImgUrl : path, isRemote ? path : "");
+                }
+
+                break;
+            }
+        }
+
         #endregion
 
         #region UnityWebRequest utilities
@@ -433,7 +470,7 @@ namespace FIFA4
 
         #endregion
 
-        public IEnumerator GetImage(UnityAction<Response<Sprite>> callback, UnityAction<float> onUpdate, string resourcesPath)
+        public IEnumerator GetImage(UnityAction<Response<Sprite>> callback, UnityAction<float> onUpdate, string resourcesPath, string savePath = "")
         {
             using (UnityWebRequest www = UnityWebRequestTexture.GetTexture(new Uri(resourcesPath).AbsoluteUri))
             {
@@ -441,6 +478,9 @@ namespace FIFA4
 
                 Texture2D texture = DownloadHandlerTexture.GetContent(www);
                 callback(new Response<Sprite>(www, Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f))));
+
+                if (!string.IsNullOrEmpty(savePath))
+                    File.WriteAllBytes(savePath, www.downloadHandler.data);
             }
         }
     }

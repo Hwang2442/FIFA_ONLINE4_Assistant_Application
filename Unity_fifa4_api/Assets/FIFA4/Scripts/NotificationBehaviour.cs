@@ -1,25 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
+using TMPro;
 
 namespace FIFA4
 {
     public class NotificationBehaviour : MonoBehaviour
     {
-        public void Show(string text, UnityAction callback = null)
+        [SerializeField] Image m_backgroundImage;
+        [SerializeField] TextMeshProUGUI m_descriptionText;
+        [SerializeField] Button m_checkButton;
+
+        public void Show(string description, UnityAction callback = null)
         {
-            var manager = GameManager.Instance;
+            gameObject.SetActive(true);
 
-            manager.UI.NotificationText.text = text;
+            m_descriptionText.text = description;
 
-            manager.UI.NotificationButton.onClick.RemoveAllListeners();
-            manager.UI.NotificationButton.onClick.AddListener(() => manager.UI.NotificationBackgroundImage.gameObject.SetActive(false));
+            m_checkButton.onClick.RemoveAllListeners();
+            m_checkButton.onClick.AddListener(() => gameObject.SetActive(false));
 
             if (callback != null)
-                manager.UI.NotificationButton.onClick.AddListener(callback);
-
-            manager.UI.NotificationBackgroundImage.gameObject.SetActive(true);
+                m_checkButton.onClick.AddListener(callback);
         }
     }
 }

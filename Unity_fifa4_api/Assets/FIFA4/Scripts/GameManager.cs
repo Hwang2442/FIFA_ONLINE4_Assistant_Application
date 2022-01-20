@@ -10,11 +10,10 @@ namespace FIFA4
     {
         #region Variables
 
-        [Header("UI")]
-        [SerializeField] UIManager m_ui;
+        [SerializeField] CanvasGroup m_canvas;
 
         [Header("Behaviours")]
-        [SerializeField] MainBehaviour m_main;
+        [SerializeField] InformationPanel m_informationPanel;
         [SerializeField] LoginBehaviour m_login;
         [SerializeField] LoadingBehaviour m_loading;
         [SerializeField] DownloadingBehaviour m_downloading;
@@ -32,34 +31,23 @@ namespace FIFA4
 
         public static GameManager Instance { get; private set; }
 
-        public UIManager UI => m_ui;
-
         #region Behaviours
 
-        public MainBehaviour Main => m_main;
+        public LoginBehaviour Login { get { return m_login; } }
 
-        public LoginBehaviour Login => m_login;
+        public LoadingBehaviour Loading { get { return m_loading; } }
+        public DownloadingBehaviour Downloading { get { return m_downloading; } }
 
-        public LoadingBehaviour Loading => m_loading;
-        public DownloadingBehaviour Downloading => m_downloading;
-
-        public NotificationBehaviour Notification => m_notification;
+        public NotificationBehaviour Notification { get { return m_notification; } }
 
         #endregion
 
         public Request RequestService => m_request;
 
-        public UserInformation UserInformation 
-        {
-            get => m_user;
-            set => m_user = value;
+        public UserInformation UserInformation { get { return m_user; }
         }
 
-        public Spid[] Spid
-        {
-            get => m_spid;
-            set => m_spid = value;
-        }
+        public Spid[] Spid { get { return m_spid; } }
 
         #endregion
 
@@ -68,6 +56,56 @@ namespace FIFA4
             Instance = this;
 
             m_request = new Request();
+        }
+
+        private void Start()
+        {
+            m_canvas.alpha = 0;
+            m_canvas.blocksRaycasts = false;
+
+            m_login.gameObject.SetActive(true);
+            m_loading.gameObject.SetActive(false);
+            m_notification.gameObject.SetActive(false);
+            m_downloading.gameObject.SetActive(false);
+
+            SetLoginEvents();
+            SetDownloadingEvents();
+        }
+
+        private void SetLoginEvents()
+        {
+            m_login.Failed.AddListener(() => m_notification.Show("닉네임을 찾을 수 없습니다."));
+            m_login.Successed.AddListener((user) => 
+            {
+                m_user = user;
+                m_downloading.DownloadingStart();
+            });
+        }
+
+        private void SetDownloadingEvents()
+        {
+            m_downloading.OnFailed.AddListener((description) => 
+            {
+                m_notification.Show(description, () =>
+                {
+#if UNITY_EDITOR
+                    UnityEditor.EditorApplication.isPlaying = false;
+#else
+                    Application.Quit();
+#endif
+                });
+            });
+            m_downloading.OnEnded.AddListener(() =>
+            {
+                Debug.Log("Main start!!");
+
+                m_spid = JsonHelper.LoadJson<Spid[]>(PathList.SpidPath);
+
+                Sequence sequence = DOTween.Sequence().OnStart(() => { m_informationPanel.SetInformation(m_user); m_canvas.alpha = 1; m_canvas.blocksRaycasts = true; });
+
+                sequence.Append(m_login.Hide());
+                sequence.Append(m_informationPanel.Show());
+            });
         }
     }
 }

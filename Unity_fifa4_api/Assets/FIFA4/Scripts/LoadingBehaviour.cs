@@ -9,37 +9,46 @@ namespace FIFA4
 {
     public class LoadingBehaviour : MonoBehaviour
     {
-        private void Start()
-        {
-            var manager = GameManager.Instance;
+        [SerializeField] CanvasGroup m_canvas;
 
-            manager.UI.LoadingCanvas.alpha = 0;
-            manager.UI.LoadingCanvas.blocksRaycasts = false;
-        }
+        [Header("Interaction")]
+        [SerializeField] Image m_rotateImage;
+        [SerializeField] TextMeshProUGUI m_descriptionText;
+
+        [Header("Background color")]
+        [SerializeField] Color m_defaultColor;
 
         public void Show(string text)
         {
-            var manager = GameManager.Instance;
+            Show(text, m_defaultColor);
+        }
 
-            manager.UI.LoadingCanvas.blocksRaycasts = true;
-            manager.UI.LoadingCanvas.DOKill();
-            manager.UI.LoadingCanvas.DOFade(1, 0.2f).From(0);
-            manager.UI.LoadingProgressImage.DOLocalRotate(new Vector3(0, 0, 180), 90, RotateMode.FastBeyond360).SetEase(Ease.Linear).SetLoops(-1, LoopType.Restart).SetSpeedBased(true).From(Vector3.zero);
+        public void Show(string text, Color backgroundColor)
+        {
+            gameObject.SetActive(true);
 
-            manager.UI.LoadingDescriptionText.text = text;
+            m_canvas.blocksRaycasts = true;
+            m_canvas.DOKill();
+            m_canvas.DOFade(1, 0.2f).From(0);
+            m_canvas.GetComponent<Image>().color = backgroundColor;
+
+            m_rotateImage.rectTransform.DOLocalRotate(new Vector3(0, 0, 180), 90, RotateMode.FastBeyond360).SetEase(Ease.Linear).SetLoops(-1, LoopType.Restart).SetSpeedBased(true).From(Vector3.zero);
+
+            m_descriptionText.text = text;
         }
 
         public void Hide()
         {
-            var manager = GameManager.Instance;
+            m_descriptionText.text = "";
 
-            manager.UI.LoadingCanvas.blocksRaycasts = false;
-            manager.UI.LoadingCanvas.DOKill();
-            manager.UI.LoadingCanvas.DOFade(0, 0.2f);
+            m_rotateImage.DOKill();
 
-            manager.UI.LoadingProgressImage.DOKill();
-
-            manager.UI.LoadingDescriptionText.text = "";
+            m_canvas.DOKill();
+            m_canvas.DOFade(0, 0.2f).OnComplete(() =>
+            {
+                m_canvas.blocksRaycasts = false;
+                gameObject.SetActive(false);
+            });
         }
     }
 }

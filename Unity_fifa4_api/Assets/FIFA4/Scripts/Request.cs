@@ -331,19 +331,6 @@ namespace FIFA4
             if (isComplete)
                 yield break;
 
-            yield return UpdatePlayerActionImageFromPid((response) =>
-            {
-                if (response.isError)
-                    return;
-
-                isComplete = true;
-                string path = PathList.GetPlayersActionImagePath(spid % 1000000);
-                sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerActionImageFromPid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
-            }, null, spid);
-
-            if (isComplete)
-                yield break;
-
             yield return UpdatePlayerImageFromSpid((response) =>
             {
                 if (response.isError)
@@ -352,6 +339,19 @@ namespace FIFA4
                 isComplete = true;
                 string path = PathList.GetPlayerImagePath(spid);
                 sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerImageFromSpid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
+            }, null, spid);
+
+            if (isComplete)
+                yield break;
+
+            yield return UpdatePlayerActionImageFromPid((response) =>
+            {
+                if (response.isError)
+                    return;
+
+                isComplete = true;
+                string path = PathList.GetPlayersActionImagePath(spid % 1000000);
+                sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerActionImageFromPid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
             }, null, spid);
 
             if (isComplete)

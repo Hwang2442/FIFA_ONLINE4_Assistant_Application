@@ -16,12 +16,16 @@ namespace FIFA4
         [SerializeField] TextMeshProUGUI m_levelText;
 
         [Header("Portrait")]
+        [SerializeField] Button m_reloadingButton;
         [SerializeField] Image m_playerImage;
         [SerializeField] Image m_seasonImage;
         [SerializeField] TextMeshProUGUI m_playerName;
+        [SerializeField] LoadingBehaviour m_loading;
 
         public Tween Show()
         {
+            m_loading.Hide();
+
             return GetComponent<RectTransform>().DOScale(Vector3.one, 0.5f).SetEase(Ease.InQuad).From(new Vector3(0, 1, 1)).OnStart(() => { m_canvas.alpha = 1; m_canvas.blocksRaycasts = true; });
         }
 
@@ -45,9 +49,11 @@ namespace FIFA4
 
         private IEnumerator Co_UpdatePortrait(GameManager manager, string loadingDescription)
         {
-            manager.Loading.Show(loadingDescription);
+            m_reloadingButton.interactable = false;
+            m_loading.Show("");
 
             Spid spid = null;
+            m_playerImage.sprite = null;
 
             m_playerImage.DOFade(0, 0);
             m_seasonImage.DOFade(0, 0);
@@ -57,8 +63,12 @@ namespace FIFA4
             {
                 spid = manager.Spid[Random.Range(0, manager.Spid.Length)];
 
+                Debug.Log(spid.id + " " + spid.name);
+
                 yield return manager.RequestService.GetSeasonImageFromSpid((response) => m_seasonImage.sprite = response.data, spid.id);
                 yield return manager.RequestService.GetPlayerImage(manager, (response) => m_playerImage.sprite = response.data.Value, (response) => m_playerImage.sprite = response.data, spid.id);
+
+                yield return new WaitForSeconds(0.1f);
             }
 
             m_playerImage.DOKill();
@@ -69,7 +79,8 @@ namespace FIFA4
 
             m_playerName.DOText(spid.name, 0.2f).From("");
 
-            manager.Loading.Hide();
+            m_loading.Hide();
+            m_reloadingButton.interactable = true;
         }
     }
 }

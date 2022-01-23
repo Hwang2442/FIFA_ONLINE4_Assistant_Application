@@ -9,18 +9,18 @@ namespace FIFA4
 {
     public class InformationPanel : MonoBehaviour
     {
-        [SerializeField] CanvasGroup m_canvas;
+        [SerializeField] CanvasGroup m_canvas = null;
 
         [Header("Panel")]
-        [SerializeField] TextMeshProUGUI m_nicknameText;
-        [SerializeField] TextMeshProUGUI m_levelText;
+        [SerializeField] TextMeshProUGUI m_nicknameText = null;
+        [SerializeField] TextMeshProUGUI m_levelText = null;
 
         [Header("Portrait")]
-        [SerializeField] Button m_reloadingButton;
-        [SerializeField] Image m_playerImage;
-        [SerializeField] Image m_seasonImage;
-        [SerializeField] TextMeshProUGUI m_playerName;
-        [SerializeField] LoadingBehaviour m_loading;
+        [SerializeField] Button m_reloadingButton = null;
+        [SerializeField] Image m_playerImage = null ;
+        [SerializeField] Image m_seasonImage = null;
+        [SerializeField] TextMeshProUGUI m_playerName = null;
+        [SerializeField] LoadingBehaviour m_loading = null;
 
         public Tween Show()
         {
@@ -44,6 +44,7 @@ namespace FIFA4
 
         public void OnClickUpdatePortrait()
         {
+            StopAllCoroutines();
             StartCoroutine(Co_UpdatePortrait(GameManager.Instance, "이미지를 불러오고 있습니다..."));
         }
 
@@ -54,10 +55,13 @@ namespace FIFA4
 
             Spid spid = null;
             m_playerImage.sprite = null;
+            m_seasonImage.sprite = null;
 
             m_playerImage.DOFade(0, 0);
             m_seasonImage.DOFade(0, 0);
             m_playerName.text = "";
+
+            yield return new WaitForSeconds(0.1f);
 
             while (m_playerImage.sprite == null)
             {
@@ -65,14 +69,16 @@ namespace FIFA4
 
                 Debug.Log(spid.id + " " + spid.name);
 
-                yield return manager.RequestService.GetSeasonImageFromSpid((response) => m_seasonImage.sprite = response.data, spid.id);
-                yield return manager.RequestService.GetPlayerImage(manager, (response) => m_playerImage.sprite = response.data.Value, (response) => m_playerImage.sprite = response.data, spid.id);
-
-                yield return new WaitForSeconds(0.1f);
+                yield return StartCoroutine(manager.RequestService.GetSeasonImageFromSpid((response) => { m_seasonImage.sprite = response.data; }, spid.id));
+                yield return StartCoroutine(manager.RequestService.GetPlayerImage(manager, (response) => { m_playerImage.sprite = response.data.Value; }, (response) => { m_playerImage.sprite = response.data; }, spid.id));
+                yield return null;
             }
+
+            yield return new WaitForSeconds(0.1f);
 
             m_playerImage.DOKill();
             m_playerImage.DOFade(1, 0.2f).From(0);
+            m_playerImage.sprite.name = spid.id.ToString();
 
             m_seasonImage.DOKill();
             m_seasonImage.DOFade(1, 0.2f).From(0);

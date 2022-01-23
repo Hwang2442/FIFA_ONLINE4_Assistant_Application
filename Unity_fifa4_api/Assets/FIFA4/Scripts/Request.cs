@@ -316,56 +316,68 @@ namespace FIFA4
 
         public IEnumerator GetPlayerImage(MonoBehaviour sender, UnityAction<Response<KeyValuePair<Properties, Sprite>>> remoteCallback, UnityAction<Response<Sprite>> localCallback, int spid)
         {
-            bool isComplete = false;
+            if (!Directory.Exists(PathList.ActionImagePath))
+                Directory.CreateDirectory(PathList.ActionImagePath);
+            if (!Directory.Exists(PathList.ImagePath))
+                Directory.CreateDirectory(PathList.ImagePath);
+
+            IEnumerator coroutine = null;
 
             yield return UpdatePlayerActionImageFromSpid((response) =>
             {
                 if (response.isError)
                     return;
 
-                isComplete = true;
                 string path = PathList.GetPlayersActionImagePath(spid);
-                sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerActionImageFromSpid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
+                coroutine = (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerActionImageFromSpid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path));
             }, null, spid);
 
-            if (isComplete)
+            if (coroutine != null)
+            {
+                yield return coroutine;
                 yield break;
+            }
 
             yield return UpdatePlayerImageFromSpid((response) =>
             {
                 if (response.isError)
                     return;
 
-                isComplete = true;
                 string path = PathList.GetPlayerImagePath(spid);
-                sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerImageFromSpid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
+                coroutine = (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerImageFromSpid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path));
             }, null, spid);
 
-            if (isComplete)
+            if (coroutine != null)
+            {
+                yield return coroutine;
                 yield break;
+            }
 
             yield return UpdatePlayerActionImageFromPid((response) =>
             {
                 if (response.isError)
                     return;
 
-                isComplete = true;
                 string path = PathList.GetPlayersActionImagePath(spid % 1000000);
-                sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerActionImageFromPid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
+                coroutine = (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerActionImageFromPid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path));
             }, null, spid);
 
-            if (isComplete)
+            if (coroutine != null)
+            {
+                yield return coroutine;
                 yield break;
+            }
 
             yield return UpdatePlayerImageFromSpid((response) =>
             {
                 if (response.isError)
                     return;
 
-                isComplete = true;
                 string path = PathList.GetPlayerImagePath(spid % 1000000);
-                sender.StartCoroutine((!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerImageFromPid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path)));
+                coroutine = (!File.Exists(path) || response.data.dateTime != File.GetLastWriteTime(path) ? GetPlayerImageFromPid(remoteCallback, null, spid, path) : GetImage(localCallback, null, path));
             }, null, spid);
+
+            yield return coroutine;
         }
 
         public IEnumerator GetSeasonImageFromSpid(UnityAction<Response<Sprite>> callback, int spid)

@@ -22,6 +22,10 @@ namespace FIFA4
         [SerializeField] TextMeshProUGUI m_playerName = null;
         [SerializeField] LoadingBehaviour m_loading = null;
 
+        [Header("Highest grade ever")]
+        [SerializeField] ScrollRect m_highestScroll = null;
+        [SerializeField] GameObject m_highestChild = null;
+
         public Tween Show()
         {
             m_loading.Hide();
@@ -37,9 +41,10 @@ namespace FIFA4
         public void SetInformation(UserInformation user)
         {
             m_nicknameText.text = user.nickname;
-            m_levelText.text = string.Format("Level : {0}", user.level);
+            m_levelText.text = string.Format("Level : {0}", user.level.ToString("N0"));
 
             StartCoroutine(Co_UpdatePortrait(GameManager.Instance, "정보를 불러오는 중입니다..."));
+            StartCoroutine(Co_UpdateHighestGradeEver(GameManager.Instance));
         }
 
         public void OnClickUpdatePortrait()
@@ -87,6 +92,56 @@ namespace FIFA4
 
             m_loading.Hide();
             m_reloadingButton.interactable = true;
+        }
+
+        private IEnumerator Co_UpdateHighestGradeEver(GameManager manager)
+        {
+            yield return manager.RequestService.GetHighestGradeEver((response) =>
+            {
+                if (response.isError)
+                    return;
+
+                MatchType[] matchTypes = JsonHelper.LoadJson<MatchType[]>(PathList.MatchTypePath);
+                Division[] divisions = JsonHelper.LoadJson<Division[]>(PathList.DivisionPath);
+                Division[] divisions_volta = JsonHelper.LoadJson<Division[]>(PathList.Division_VoltaPath);
+
+                Transform child = null;
+
+                foreach (var grade in response.data)
+                {
+                    child = Instantiate(m_highestChild, m_highestScroll.content).transform;
+
+                    string datetime = grade.achievementDate.ToString("yyyy'년\n'MM'월 'dd'일 '");
+                    string divisionName = "";
+                    string matchtypeDesc = "";
+
+                    foreach (var matchType in matchTypes)
+                    {
+                        if (grade.matchType != matchType.matchType)
+                            continue;
+
+                        foreach (var division in (grade.matchType < 204 ? divisions : divisions_volta))
+                        {
+                            if (grade.division != division.divisionId)
+                                continue;
+
+                            divisionName = division.divisionName;
+
+                            break;
+                        }
+
+                        matchtypeDesc = matchType.description;
+
+                        break;
+                    }
+
+                    child.Find("Text.Matchtype").GetComponent<TextMeshProUGUI>().text = matchtypeDesc;
+                    child.Find("Text.Division").GetComponent<TextMeshProUGUI>().text = divisionName;
+                    child.Find("Text.Datetime").GetComponent<TextMeshProUGUI>().text = datetime;
+                }
+
+                child.Find("Image.Boundary").gameObject.SetActive(false);
+            }, null, manager.UserInformation.accessId);
         }
     }
 }

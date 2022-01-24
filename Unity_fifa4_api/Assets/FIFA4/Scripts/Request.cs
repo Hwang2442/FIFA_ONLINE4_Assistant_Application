@@ -29,14 +29,14 @@ namespace FIFA4
             }
         }
 
-        public IEnumerator GetHighestGradeEver(UnityAction<Response<HighestGradeEver>> callback, UnityAction<float> onUpdate, string accessid)
+        public IEnumerator GetHighestGradeEver(UnityAction<Response<HighestGradeEver[]>> callback, UnityAction<float> onUpdate, string accessid)
         {
             using (UnityWebRequest www = GetRequest(APIList.GetHighestGradeEverFromAccessid(accessid)))
             {
                 yield return SendRequest(www, onUpdate);
 
                 if (callback != null)
-                    callback(new Response<HighestGradeEver>(www, JsonHelper.FromJson<HighestGradeEver>(www.downloadHandler.text)));
+                    callback(new Response<HighestGradeEver[]>(www, JsonHelper.FromJson<HighestGradeEver[]>(www.downloadHandler.text)));
             }
         }
 

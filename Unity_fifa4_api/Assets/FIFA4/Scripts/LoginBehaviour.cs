@@ -54,9 +54,7 @@ namespace FIFA4
 
         public Tween Show()
         {
-            gameObject.SetActive(true);
-
-            return m_panel.rectTransform.DOScale(new Vector3(1, 1, 1), 0.5f).SetEase(Ease.InQuad).OnStart(() => { m_canvas.alpha = 1;m_canvas.blocksRaycasts = true; });
+            return m_panel.rectTransform.DOScale(new Vector3(1, 1, 1), 0.5f).SetEase(Ease.InQuad).OnStart(() => { m_canvas.alpha = 1;m_canvas.blocksRaycasts = true; gameObject.SetActive(true); });
         }
 
         public Tween Hide()

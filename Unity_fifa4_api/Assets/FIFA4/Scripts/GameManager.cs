@@ -14,6 +14,7 @@ namespace FIFA4
 
         [Header("Behaviours")]
         [SerializeField] InformationPanel m_informationPanel;
+        [SerializeField] TransactionRecordsPanel m_transactionPanel;
         [SerializeField] LoginBehaviour m_login;
         [SerializeField] LoadingBehaviour m_loading;
         [SerializeField] DownloadingBehaviour m_downloading;
@@ -103,8 +104,10 @@ namespace FIFA4
 
                 Sequence sequence = DOTween.Sequence().OnStart(() => { m_informationPanel.SetInformation(m_user); m_canvas.alpha = 1; m_canvas.blocksRaycasts = true; });
 
+                sequence.AppendCallback(() => m_canvas.alpha = 0);
                 sequence.Append(m_login.Hide());
                 sequence.Append(m_informationPanel.Show());
+                sequence.Join(m_canvas.DOFade(1, 0.5f).From(0));
             });
         }
     }

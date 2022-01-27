@@ -26,6 +26,8 @@ namespace FIFA4
         [SerializeField] ScrollRect m_highestScroll = null;
         [SerializeField] GameObject m_highestChild = null;
 
+        public bool isHiding { get { return m_canvas.alpha < 1; } }
+
         public Tween Show()
         {
             m_loading.Hide();
@@ -36,6 +38,11 @@ namespace FIFA4
         public Tween Hide()
         {
             return GetComponent<RectTransform>().DOScale(new Vector3(0, 1, 1), 0.5f).SetEase(Ease.InQuad).From(Vector3.one).OnComplete(() => { m_canvas.alpha = 0; m_canvas.blocksRaycasts = false; });
+        }
+
+        public Tween AlphaTweening(float alpha, float duration)
+        {
+            return m_canvas.DOFade(alpha, duration);
         }
 
         public void SetInformation(UserInformation user)
@@ -75,7 +82,7 @@ namespace FIFA4
                 Debug.Log(spid.id + " " + spid.name);
 
                 yield return StartCoroutine(manager.RequestService.GetSeasonImageFromSpid((response) => { m_seasonImage.sprite = response.data; }, spid.id));
-                yield return StartCoroutine(manager.RequestService.GetPlayerImage(manager, (response) => { m_playerImage.sprite = response.data.Value; }, (response) => { m_playerImage.sprite = response.data; }, spid.id));
+                yield return StartCoroutine(manager.RequestService.GetPlayerImage((response) => { m_playerImage.sprite = response.data.Value; }, (response) => { m_playerImage.sprite = response.data; }, spid.id));
                 yield return null;
             }
 

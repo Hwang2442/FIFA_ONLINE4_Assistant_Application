@@ -314,7 +314,7 @@ namespace FIFA4
             }
         }
 
-        public IEnumerator GetPlayerImage(MonoBehaviour sender, UnityAction<Response<KeyValuePair<Properties, Sprite>>> remoteCallback, UnityAction<Response<Sprite>> localCallback, int spid)
+        public IEnumerator GetPlayerImage(UnityAction<Response<KeyValuePair<Properties, Sprite>>> remoteCallback, UnityAction<Response<Sprite>> localCallback, int spid)
         {
             if (!Directory.Exists(PathList.ActionImagePath))
                 Directory.CreateDirectory(PathList.ActionImagePath);

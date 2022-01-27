@@ -53,10 +53,10 @@ namespace FIFA4
         [JsonProperty("spid")] public readonly int spid;
 
         [JsonProperty("grade")] public readonly int grade;
-        [JsonProperty("value")] public readonly int money;
+        [JsonProperty("value")] public readonly ulong money;
 
         [JsonConstructor]
-        public TransactionRecords([JsonProperty("tradeDate")] string tradeDate, [JsonProperty("saleSn")] string saleSn, [JsonProperty("spid")] int spid, [JsonProperty("grade")] int grade, [JsonProperty("value")] int money)
+        public TransactionRecords([JsonProperty("tradeDate")] string tradeDate, [JsonProperty("saleSn")] string saleSn, [JsonProperty("spid")] int spid, [JsonProperty("grade")] int grade, [JsonProperty("value")] ulong money)
         {
             this.tradeDate = DateTime.Parse(tradeDate);
 

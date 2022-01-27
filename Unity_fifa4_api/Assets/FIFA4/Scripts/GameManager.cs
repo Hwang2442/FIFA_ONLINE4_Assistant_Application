@@ -100,15 +100,40 @@ namespace FIFA4
             {
                 Debug.Log("Main start!!");
 
-                m_spid = JsonHelper.LoadJson<Spid[]>(PathList.SpidPath);
-
-                Sequence sequence = DOTween.Sequence().OnStart(() => { m_informationPanel.SetInformation(m_user); m_canvas.alpha = 1; m_canvas.blocksRaycasts = true; });
-
-                sequence.AppendCallback(() => m_canvas.alpha = 0);
-                sequence.Append(m_login.Hide());
-                sequence.Append(m_informationPanel.Show());
-                sequence.Join(m_canvas.DOFade(1, 0.5f).From(0));
+                StartCoroutine(Co_DateUpdate());
             });
+        }
+
+        #region Button methods
+
+        public void OnClickTransactionButton()
+        {
+            Sequence sequence = DOTween.Sequence();
+
+            sequence.Append(m_informationPanel.AlphaTweening(m_informationPanel.isHiding ? 1f : 0.1f, 0.5f));
+            sequence.Join(m_transactionPanel.ShowAndHide());
+        }
+
+        #endregion
+
+        private IEnumerator Co_DateUpdate()
+        {
+            m_loading.Show("정보를 불러오고 있습니다...");
+
+            m_spid = JsonHelper.LoadJson<Spid[]>(PathList.SpidPath);
+
+            yield return m_transactionPanel.Co_RecordsUpdate(this, null, null);
+
+            m_loading.Hide();
+
+            yield return new WaitForSeconds(0.2f);
+
+            Sequence sequence = DOTween.Sequence().OnStart(() => { m_informationPanel.SetInformation(m_user); m_canvas.alpha = 1; m_canvas.blocksRaycasts = true; });
+
+            sequence.AppendCallback(() => m_canvas.alpha = 0);
+            sequence.Append(m_login.Hide());
+            sequence.Append(m_informationPanel.Show());
+            sequence.Join(m_canvas.DOFade(1, 0.5f).From(0));
         }
     }
 }

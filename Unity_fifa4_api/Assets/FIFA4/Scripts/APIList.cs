@@ -89,7 +89,7 @@ namespace FIFA4
         {
             string url = Path.Combine(rootUrl, "fifaonline4/v1.0/users/{0}/markets?tradetype={1}&offset={2}&limit={3}");
 
-            return string.Format(accessid, "buy", offset, Mathf.Clamp(limit, 1, 100));
+            return string.Format(url, accessid, "buy", offset, Mathf.Clamp(limit, 1, 100));
         }
 
         /// <summary>

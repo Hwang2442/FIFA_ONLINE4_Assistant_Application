@@ -68,9 +68,51 @@ namespace FIFA4
         }
     }
 
+
     #endregion
 
-    #region Mate information
+    #region Match information
+
+    [Serializable]
+    public class MatchDTO
+    {
+        [Serializable]
+        public class MatchInfoDTO
+        {
+            [Serializable]
+            public class MatchDetailDTO
+            {
+
+            }
+
+            public class ShootDTO
+            {
+
+            }
+
+            public class PassDTO
+            {
+
+            }
+
+            public class DefenceDTO
+            {
+
+            }
+
+            [JsonProperty("accessId")] public readonly string accessId;
+            [JsonProperty("nickname")] public readonly string nickname;
+        }
+
+        [JsonProperty("matchId")] public readonly string matchId;
+        [JsonProperty("matchDate")] public readonly DateTime matchDate;
+        [JsonProperty("matchType")] public readonly int matchType;
+        [JsonProperty("matchInfo")] public readonly MatchInfoDTO[] matchInfos;
+    }
+
+    #endregion
+
+    #region Mata information
 
     [Serializable]
     public class MatchType

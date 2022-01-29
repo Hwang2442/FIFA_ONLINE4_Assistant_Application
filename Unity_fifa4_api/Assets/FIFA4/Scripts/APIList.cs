@@ -8,9 +8,9 @@ namespace FIFA4
     /// </summary>
     public static class APIList
     {
-        private static readonly string rootUrl = "https://api.nexon.co.kr/";
-        private static readonly string staticUrl = "https://static.api.nexon.co.kr/";
-        private static readonly string resourcesUrl = "https://fo4.dn.nexoncdn.co.kr/";
+        private static readonly string rooturi = "https://api.nexon.co.kr/";
+        private static readonly string staticuri = "https://static.api.nexon.co.kr/";
+        private static readonly string resourcesuri = "https://fo4.dn.nexoncdn.co.kr/";
 
         #region User information
 
@@ -23,11 +23,11 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetUserInformationFromNickname(string nickname)
         {
-            string url = Path.Combine(rootUrl, "fifaonline4/v1.0/users?nickname={0}");
+            string uri = Path.Combine(rooturi, "fifaonline4/v1.0/users?nickname={0}");
 
-            Debug.Log(url);
+            Debug.Log(uri);
 
-            return string.Format(url, nickname);
+            return string.Format(uri, nickname);
         }
 
         /// <summary>
@@ -38,9 +38,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetUserInformationFromAccessid(string accessid)
         {
-            string url = Path.Combine(rootUrl, "fifaonline4/v1.0/users/{0}");
+            string uri = Path.Combine(rooturi, "fifaonline4/v1.0/users/{0}");
 
-            return string.Format(url, accessid);
+            return string.Format(uri, accessid);
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetHighestGradeEverFromAccessid(string accessid)
         {
-            string url = Path.Combine(rootUrl, "fifaonline4/v1.0/users/{0}/maxdivision");
+            string uri = Path.Combine(rooturi, "fifaonline4/v1.0/users/{0}/maxdivision");
 
-            return string.Format(url, accessid);
+            return string.Format(uri, accessid);
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace FIFA4
         /// <returns>https://api.nexon.co.kr/fifaonline4/v1.0/users/{accessid}/matches?matchtype={matchtype}&offset={offset}&limit={limit}</returns>
         public static string GetMatchRecordFromAccessid(string accessid, int matchType, int offset = 0, int limit = 100)
         {
-            string url = Path.Combine(rootUrl, "fifaonline4/v1.0/users/{0}/matches?matchtype={1}&offset={2}&limit={3}");
+            string uri = Path.Combine(rooturi, "fifaonline4/v1.0/users/{0}/matches?matchtype={1}&offset={2}&limit={3}");
 
-            return string.Format(url, accessid, matchType, offset, Mathf.Clamp(limit, 1, 100));
+            return string.Format(uri, accessid, matchType, offset, Mathf.Clamp(limit, 1, 100));
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetPurchaseRecordsFromAccessid(string accessid, int offset = 0, int limit = 100)
         {
-            string url = Path.Combine(rootUrl, "fifaonline4/v1.0/users/{0}/markets?tradetype={1}&offset={2}&limit={3}");
+            string uri = Path.Combine(rooturi, "fifaonline4/v1.0/users/{0}/markets?tradetype={1}&offset={2}&limit={3}");
 
-            return string.Format(url, accessid, "buy", offset, Mathf.Clamp(limit, 1, 100));
+            return string.Format(uri, accessid, "buy", offset, Mathf.Clamp(limit, 1, 100));
         }
 
         /// <summary>
@@ -104,9 +104,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetSalesRecordFromAccessid(string accessid, int offset = 0, int limit = 100)
         {
-            string url = Path.Combine(rootUrl, "fifaonline4/v1.0/users/{0}/markets?tradetype={1}&offset={2}&limit={3}");
+            string uri = Path.Combine(rooturi, "fifaonline4/v1.0/users/{0}/markets?tradetype={1}&offset={2}&limit={3}");
 
-            return string.Format(url, accessid, "sell", offset, Mathf.Clamp(limit, 1, 100));
+            return string.Format(uri, accessid, "sell", offset, Mathf.Clamp(limit, 1, 100));
         }
 
         #endregion
@@ -126,9 +126,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetAllMatchRecords_Asc(int matchType, int offset = 0, int limit = 100)
         {
-            string url = Path.Combine(rootUrl, "fifaonline4/v1.0/matches?matchtype={0}&offset={1}&limit={2}&orderby={3}");
+            string uri = Path.Combine(rooturi, "fifaonline4/v1.0/matches?matchtype={0}&offset={1}&limit={2}&orderby={3}");
 
-            return string.Format(url, matchType, offset, limit, "asc");
+            return string.Format(uri, matchType, offset, limit, "asc");
         }
 
         /// <summary>
@@ -144,9 +144,16 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetAllMatchRecords_Desc(int matchType, int offset = 0, int limit = 100)
         {
-            string url = Path.Combine(rootUrl, "fifaonline4/v1.0/matches?matchtype={0}&offset={1}&limit={2}&orderby={3}");
+            string uri = Path.Combine(rooturi, "fifaonline4/v1.0/matches?matchtype={0}&offset={1}&limit={2}&orderby={3}");
 
-            return string.Format(url, matchType, offset, limit, "desc");
+            return string.Format(uri, matchType, offset, limit, "desc");
+        }
+
+        public static string GetMetchDetailRecord(string matchid)
+        {
+            string uri = Path.Combine(rooturi, "fifaonline4/v1.0/matches/{0}");
+
+            return string.Format(uri, matchid);
         }
 
         #endregion
@@ -166,9 +173,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetMatchType()
         {
-            string url = Path.Combine(staticUrl, "fifaonline4/latest/matchtype.json");
+            string uri = Path.Combine(staticuri, "fifaonline4/latest/matchtype.json");
 
-            return url;
+            return uri;
         }
 
         /// <summary>
@@ -178,9 +185,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetSpid()
         {
-            string url = Path.Combine(staticUrl, "fifaonline4/latest/spid.json");
+            string uri = Path.Combine(staticuri, "fifaonline4/latest/spid.json");
 
-            return url;
+            return uri;
         }
 
         /// <summary>
@@ -191,9 +198,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetSeasonId()
         {
-            string url = Path.Combine(staticUrl, "fifaonline4/latest/seasonid.json");
+            string uri = Path.Combine(staticuri, "fifaonline4/latest/seasonid.json");
 
-            return url;
+            return uri;
         }
 
         /// <summary>
@@ -203,9 +210,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetSpposition()
         {
-            string url = Path.Combine(staticUrl, "fifaonline4/latest/spposition.json");
+            string uri = Path.Combine(staticuri, "fifaonline4/latest/spposition.json");
 
-            return url;
+            return uri;
         }
 
         /// <summary>
@@ -215,9 +222,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetDivision()
         {
-            string url = Path.Combine(staticUrl, "fifaonline4/latest/division.json");
+            string uri = Path.Combine(staticuri, "fifaonline4/latest/division.json");
 
-            return url;
+            return uri;
         }
 
         /// <summary>
@@ -227,9 +234,9 @@ namespace FIFA4
         /// <returns></returns>
         public static string GetDivision_Volta()
         {
-            string url = Path.Combine(staticUrl, "fifaonline4/latest/division_volta.json");
+            string uri = Path.Combine(staticuri, "fifaonline4/latest/division_volta.json");
 
-            return url;
+            return uri;
         }
 
         /// <summary>
@@ -241,9 +248,9 @@ namespace FIFA4
         /// <returns>https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/playersAction/p{spid}.png</returns>
         public static string GetPlayerActionImageFromSpid(int spid)
         {
-            string url = Path.Combine(resourcesUrl, "live/externalAssets/common/playersAction/p{0}.png");
+            string uri = Path.Combine(resourcesuri, "live/externalAssets/common/playersAction/p{0}.png");
 
-            return string.Format(url, spid);
+            return string.Format(uri, spid);
         }
 
         /// <summary>
@@ -255,9 +262,9 @@ namespace FIFA4
         /// <returns>https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/playersAction/p{pid}.png</returns>
         public static string GetPlayerActionImageFromPid(int pid)
         {
-            string url = Path.Combine(resourcesUrl, "live/externalAssets/common/playersAction/p{0}.png");
+            string uri = Path.Combine(resourcesuri, "live/externalAssets/common/playersAction/p{0}.png");
 
-            return string.Format(url, pid);
+            return string.Format(uri, pid);
         }
 
         /// <summary>
@@ -269,9 +276,9 @@ namespace FIFA4
         /// <returns>https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/players/p{spid}.png</returns>
         public static string GetPlayerImageFromSpid(int spid)
         {
-            string url = Path.Combine(resourcesUrl, "live/externalAssets/common/players/p{0}.png)");
+            string uri = Path.Combine(resourcesuri, "live/externalAssets/common/players/p{0}.png)");
 
-            return string.Format(url, spid);
+            return string.Format(uri, spid);
         }
 
         /// <summary>
@@ -283,9 +290,9 @@ namespace FIFA4
         /// <returns>https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/players/p{pid}.png</returns>
         public static string GetPlayerImageFromPid(int pid)
         {
-            string url = Path.Combine(resourcesUrl, "live/externalAssets/common/players/p{0}.png");
+            string uri = Path.Combine(resourcesuri, "live/externalAssets/common/players/p{0}.png");
 
-            return string.Format(url, pid);
+            return string.Format(uri, pid);
         }
 
         #endregion

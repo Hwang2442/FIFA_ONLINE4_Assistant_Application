@@ -62,6 +62,21 @@ namespace FIFA4
             }
         }
 
+        public IEnumerator GetMatchRecords(UnityAction<Response<string[]>> callback, UnityAction<float> onUpdate, string accessid, int matchtype, int offset = 0, int limit = 100)
+        {
+            using (UnityWebRequest www = GetRequest(APIList.GetMatchRecordFromAccessid(accessid, matchtype, offset, limit)))
+            {
+                yield return SendRequest(www, onUpdate);
+
+                if (callback != null)
+                    callback(new Response<string[]>(www, JsonHelper.FromJson<string[]>(www.downloadHandler.text)));
+            }
+        }
+
+        #endregion
+
+        #region Match information
+
         #endregion
 
         #region Meta information

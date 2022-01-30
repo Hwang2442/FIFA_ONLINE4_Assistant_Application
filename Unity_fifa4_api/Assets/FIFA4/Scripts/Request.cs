@@ -53,7 +53,7 @@ namespace FIFA4
 
         public IEnumerator GetSalesRecord(UnityAction<Response<TransactionRecords[]>> callback, UnityAction<float> onUpdate, string accessid, int offset = 0, int limit = 100)
         {
-            using (UnityWebRequest www = GetRequest(APIList.GetSalesRecordFromAccessid(accessid, offset, limit)))
+            using (UnityWebRequest www = GetRequest(APIList.GetSalesRecordsFromAccessid(accessid, offset, limit)))
             {
                 yield return SendRequest(www, onUpdate);
 
@@ -96,6 +96,17 @@ namespace FIFA4
 
                 if (callback != null)
                     callback(new Response<string[]>(www, JsonHelper.FromJson<string[]>(www.downloadHandler.text)));
+            }
+        }
+
+        public IEnumerator GetMatchDetailRecord(UnityAction<Response<MatchDTO>> callback, UnityAction<float> onUpdate, string matchid)
+        {
+            using (UnityWebRequest www = GetRequest(APIList.GetMatchDetailRecord(matchid)))
+            {
+                yield return SendRequest(www, onUpdate);
+
+                if (callback != null)
+                    callback(new Response<MatchDTO>(www, JsonHelper.FromJson<MatchDTO>(www.downloadHandler.text)));
             }
         }
 

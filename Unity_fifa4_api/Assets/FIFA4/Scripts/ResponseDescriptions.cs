@@ -430,17 +430,52 @@ namespace FIFA4
 
             [JsonProperty("accessId")] public readonly string accessId;
             [JsonProperty("nickname")] public readonly string nickname;
+
             [JsonProperty("matchDetail")] public readonly MatchDetailDTO matchDetail;
+
             [JsonProperty("shoot")] public readonly ShootDTO shoot;
             [JsonProperty("shootDetail")] public readonly ShootDetailDTO[] shootDetails;
+
             [JsonProperty("pass")] public readonly PassDTO pass;
             [JsonProperty("defence")] public readonly DefenceDTO defence;
+
+            [JsonProperty("player")] public readonly PlayerDTO[] players;
+
+            [JsonConstructor]
+            public MatchInfoDTO([JsonProperty("accessId")] string accessId, [JsonProperty("nickname")] string nickname,
+                [JsonProperty("matchDetail")] MatchDetailDTO matchDetail,
+                [JsonProperty("shoot")] ShootDTO shoot, [JsonProperty("shootDetail")] ShootDetailDTO[] shootDetails,
+                [JsonProperty("pass")] PassDTO pass, [JsonProperty("defence")] DefenceDTO defence,
+                [JsonProperty("player")] PlayerDTO[] players)
+            {
+                this.accessId = accessId;
+                this.nickname = nickname;
+
+                this.matchDetail = matchDetail;
+
+                this.shoot = shoot;
+                this.shootDetails = shootDetails;
+
+                this.pass = pass;
+                this.defence = defence;
+
+                this.players = players;
+            }
         }
 
         [JsonProperty("matchId")] public readonly string matchId;
         [JsonProperty("matchDate")] public readonly DateTime matchDate;
         [JsonProperty("matchType")] public readonly int matchType;
         [JsonProperty("matchInfo")] public readonly MatchInfoDTO[] matchInfos;
+
+        [JsonConstructor]
+        public MatchDTO([JsonProperty("matchId")] string matchId, [JsonProperty("matchDate")] DateTime matchDate, [JsonProperty("matchType")] int matchType, [JsonProperty("matchInfo")] MatchInfoDTO[] matchInfos)
+        {
+            this.matchId = matchId;
+            this.matchDate = matchDate;
+            this.matchType = matchType;
+            this.matchInfos = matchInfos;
+        }
     }
 
     #endregion

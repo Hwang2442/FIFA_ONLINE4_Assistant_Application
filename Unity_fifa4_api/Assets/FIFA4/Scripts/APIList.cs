@@ -102,7 +102,7 @@ namespace FIFA4
         /// <param name="offset"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public static string GetSalesRecordFromAccessid(string accessid, int offset = 0, int limit = 100)
+        public static string GetSalesRecordsFromAccessid(string accessid, int offset = 0, int limit = 100)
         {
             string uri = Path.Combine(rooturi, "fifaonline4/v1.0/users/{0}/markets?tradetype={1}&offset={2}&limit={3}");
 
@@ -149,7 +149,7 @@ namespace FIFA4
             return string.Format(uri, matchType, offset, limit, "desc");
         }
 
-        public static string GetMetchDetailRecord(string matchid)
+        public static string GetMatchDetailRecord(string matchid)
         {
             string uri = Path.Combine(rooturi, "fifaonline4/v1.0/matches/{0}");
 

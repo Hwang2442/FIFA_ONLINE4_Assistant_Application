@@ -19,15 +19,15 @@ public class Temp : MonoBehaviour
 
         yield return null;
 
-        //yield return GetImage((sprite) => image.sprite = sprite, "C:/Users/Hwang/Downloads/p101000001.png");
+        yield return GetImage((sprite) => image.sprite = sprite, "C:/Users/Hwang/Downloads/p101000001.png");
 
-        yield return request.GetMatchRecords((response) =>
+        yield return request.GetMatchDetailRecord((response) =>
         {
             if (!response.isError)
             {
                 Debug.Log(response.data);
             }
-        }, null, "128db12de51acf8b954ea795", 50);
+        }, null, "610f4d1aad17ea1b248adb9f");
     }
 
     public IEnumerator GetImage(UnityAction<Sprite> callback, string resourcesPath)

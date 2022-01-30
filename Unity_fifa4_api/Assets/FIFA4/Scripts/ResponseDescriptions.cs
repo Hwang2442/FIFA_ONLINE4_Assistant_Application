@@ -98,7 +98,7 @@ namespace FIFA4
                 [JsonProperty("possession")] public readonly int possession;
                 [JsonProperty("OffsideCount")] public readonly int OffsideCount;
                 
-                [JsonProperty("averageRating")] public readonly int averageRating;
+                [JsonProperty("averageRating")] public readonly double averageRating;
                 
                 [JsonProperty("controller")] public readonly string controller;
 
@@ -107,7 +107,7 @@ namespace FIFA4
                     [JsonProperty("matchResult")] string matchResult, [JsonProperty("matchEndType")] int matchEndType,
                     [JsonProperty("systemPause")] int systemPause,
                     [JsonProperty("foul")] int foul, [JsonProperty("injury")] int injury, [JsonProperty("redCards")] int redCards, [JsonProperty("yellowCards")] int yellowCards, [JsonProperty("dribble")] int dribble, [JsonProperty("cornerKick")] int cornerKick, [JsonProperty("possession")] int possession, [JsonProperty("OffsideCount")] int OffsideCount,
-                    [JsonProperty("averageRating")] int averageRating,
+                    [JsonProperty("averageRating")] double averageRating,
                     [JsonProperty("controller")] string controller)
                 {
                     this.seasonId = seasonId;
@@ -415,16 +415,16 @@ namespace FIFA4
                 [JsonProperty("spPosition")] public readonly int spPosition;
                 [JsonProperty("spGrade")] public readonly int spGrade;
 
-                [JsonProperty("status")] public readonly StatusDTO[] statuses;
+                [JsonProperty("status")] public readonly StatusDTO status;
 
                 [JsonConstructor]
-                public PlayerDTO([JsonProperty("spId")] int spId, [JsonProperty("spPosition")] int spPosition, [JsonProperty("spGrade")] int spGrade, [JsonProperty("status")] StatusDTO[] statuses)
+                public PlayerDTO([JsonProperty("spId")] int spId, [JsonProperty("spPosition")] int spPosition, [JsonProperty("spGrade")] int spGrade, [JsonProperty("status")] StatusDTO status)
                 {
                     this.spId = spId;
                     this.spPosition = spPosition;
                     this.spGrade = spGrade;
 
-                    this.statuses = statuses;
+                    this.status = status;
                 }
             }
 

@@ -77,6 +77,28 @@ namespace FIFA4
 
         #region Match information
 
+        public IEnumerator GetAllMatchRecords_Asc(UnityAction<Response<string[]>> callback, UnityAction<float> onUpdate, int matchtype, int offset, int limit)
+        {
+            using (UnityWebRequest www = GetRequest(APIList.GetAllMatchRecords_Asc(matchtype, offset, limit)))
+            {
+                yield return SendRequest(www, onUpdate);
+
+                if (callback != null)
+                    callback(new Response<string[]>(www, JsonHelper.FromJson<string[]>(www.downloadHandler.text)));
+            }
+        }
+
+        public IEnumerator GetAllMatchRecords_Desc(UnityAction<Response<string[]>> callback, UnityAction<float> onUpdate, int matchtype, int offset, int limit)
+        {
+            using (UnityWebRequest www = GetRequest(APIList.GetAllMatchRecords_Desc(matchtype, offset, limit)))
+            {
+                yield return SendRequest(www, onUpdate);
+
+                if (callback != null)
+                    callback(new Response<string[]>(www, JsonHelper.FromJson<string[]>(www.downloadHandler.text)));
+            }
+        }
+
         #endregion
 
         #region Meta information

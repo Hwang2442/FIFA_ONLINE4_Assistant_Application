@@ -16,6 +16,7 @@ namespace FIFA4
         [SerializeField] CanvasGroup m_canvas;
         [SerializeField] TextMeshProUGUI m_descText;
         [SerializeField] ScrollRect m_recordScrollView;
+        [SerializeField] MatchRecordChild m_recordPrefab;
 
         [Header("Filter")]
         [SerializeField] ScrollRect m_filterScrollView;
@@ -68,6 +69,8 @@ namespace FIFA4
             
         }
 
+        #endregion
+
         public IEnumerator Co_RecordUpdate(GameManager manager, MatchType matchType, UnityAction onStart, UnityAction onComplete)
         {
             if (onStart != null)
@@ -81,14 +84,13 @@ namespace FIFA4
             {
                 yield return manager.RequestService.GetMatchDetailRecord((response) =>
                 {
-
+                    MatchRecordChild child = (i + 1) > m_recordScrollView.content.childCount ? Instantiate(m_recordPrefab, m_recordScrollView.content) : m_recordScrollView.content.GetChild(i).GetComponent<MatchRecordChild>();
+                    child.SetRecord(manager, response.data);
                 }, null, records[i]);
             }
 
             if (onComplete != null)
                 onComplete();
         }
-
-        #endregion
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace FIFA4
         [Header("Behaviours")]
         [SerializeField] InformationPanel m_informationPanel;
         [SerializeField] TransactionRecordsPanel m_transactionPanel;
+        [SerializeField] MatchRecordsPanel m_matchRecordPanel;
         [SerializeField] LoginBehaviour m_login;
         [SerializeField] LoadingBehaviour m_loading;
         [SerializeField] DownloadingBehaviour m_downloading;
@@ -121,8 +123,10 @@ namespace FIFA4
             m_loading.Show("정보를 불러오고 있습니다...");
 
             m_spid = JsonHelper.LoadJson<Spid[]>(PathList.SpidPath);
+            m_matchRecordPanel.Initialize();
 
             yield return m_transactionPanel.Co_RecordsUpdate(this, null, null);
+            //yield return m_matchRecordPanel.Co_RecordUpdate(this, (from matchType in JsonHelper.LoadJson<MatchType[]>(PathList.MatchTypePath) where matchType.description == "공식경기" select matchType).First(), null, null);
 
             m_loading.Hide();
 

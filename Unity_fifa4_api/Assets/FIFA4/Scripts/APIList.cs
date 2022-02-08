@@ -25,8 +25,6 @@ namespace FIFA4
         {
             string uri = Path.Combine(rooturi, "fifaonline4/v1.0/users?nickname={0}");
 
-            Debug.Log(uri);
-
             return string.Format(uri, nickname);
         }
 

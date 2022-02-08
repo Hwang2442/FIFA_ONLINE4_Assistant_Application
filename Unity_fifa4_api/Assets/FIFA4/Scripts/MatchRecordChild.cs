@@ -19,7 +19,7 @@ namespace FIFA4
         [SerializeField] TextMeshProUGUI m_summaryText;
         [SerializeField] TextMeshProUGUI m_dateTimeText;
 
-        public void SetRecord(GameManager manager, MatchDTO match)
+        public bool SetRecord(GameManager manager, MatchDTO match)
         {
             MatchDTO.MatchInfoDTO me = null;
             MatchDTO.MatchInfoDTO other = null;
@@ -32,6 +32,9 @@ namespace FIFA4
                     other = matchInfo;
             }
 
+            if (me == null || other == null)
+                return false;
+
             // Nickname.
             m_meText.text = me.nickname;
             m_otherText.text = other.nickname;
@@ -40,6 +43,8 @@ namespace FIFA4
             m_scoreText.text = string.Format("{0} : {1}", me.shoot.goalTotalDisplay, other.shoot.goalTotalDisplay);
             m_summaryText.text = (me.matchDetail.matchEndType == 0 ? me.matchDetail.matchResult : (me.matchDetail.matchEndType == 1 ? "몰수승" : "몰수패"));
             m_dateTimeText.text = match.matchDate.ToString("yyyy'년 'MM'월 'dd'일 'HH':'mm");
+
+            return true;
         }
     }
 }

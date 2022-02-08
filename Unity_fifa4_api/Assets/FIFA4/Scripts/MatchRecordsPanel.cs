@@ -20,7 +20,6 @@ namespace FIFA4
 
         [Header("Filter")]
         [SerializeField] ScrollRect m_filterScrollView;
-        [SerializeField] Button m_filterButtonPrefab;
 
         [Space]
         [SerializeField] Button m_showHideButton;
@@ -28,6 +27,22 @@ namespace FIFA4
         private void Start()
         {
             m_showHideButton.image.rectTransform.localRotation = Quaternion.Euler(0, 0, -90);
+        }
+
+        public void Initialize()
+        {
+            var matchTypes = JsonHelper.LoadJson<MatchType[]>(PathList.MatchTypePath);
+            Button prefab = m_filterScrollView.content.GetChild(0).GetComponent<Button>();
+
+            prefab.GetComponentInChildren<TextMeshProUGUI>().text = matchTypes[0].description;
+            prefab.onClick.AddListener(() => OnClickFilterButton(prefab));
+
+            for (int i = 1; i < matchTypes.Length; i++)
+            {
+                Button button = Instantiate(prefab, m_filterScrollView.content);
+                button.GetComponentInChildren<TextMeshProUGUI>().text = matchTypes[i].description;
+                button.onClick.AddListener(() => OnClickFilterButton(button));
+            }
         }
 
         public Sequence ShowAndHide()
@@ -66,27 +81,36 @@ namespace FIFA4
                 child.interactable = child.GetInstanceID() != button.GetInstanceID();
             }
 
-            
+            StartCoroutine(Co_RecordUpdate(GameManager.Instance, JsonHelper.LoadJson<MatchType[]>(PathList.MatchTypePath)[button.transform.GetSiblingIndex()], null, null));
         }
 
         #endregion
 
-        public IEnumerator Co_RecordUpdate(GameManager manager, MatchType matchType, UnityAction onStart, UnityAction onComplete)
+        public IEnumerator Co_RecordUpdate(GameManager manager, MatchType matchType, UnityAction onStart, UnityAction onComplete, int limit = 100)
         {
             if (onStart != null)
                 onStart();
 
             string[] records = null;
 
-            yield return manager.RequestService.GetMatchRecords((response) => { records = response.data; }, null, manager.UserInformation.accessId, matchType.matchType);
+            yield return manager.RequestService.GetMatchRecords((response) => { records = response.data; }, null, manager.UserInformation.accessId, matchType.matchType, 0, limit);
+
+            foreach (Transform child in m_recordScrollView.content)
+            {
+                child.gameObject.SetActive(false);
+            }
 
             for (int i = 0; i < records.Length; i++)
             {
-                yield return manager.RequestService.GetMatchDetailRecord((response) =>
-                {
-                    MatchRecordChild child = (i + 1) > m_recordScrollView.content.childCount ? Instantiate(m_recordPrefab, m_recordScrollView.content) : m_recordScrollView.content.GetChild(i).GetComponent<MatchRecordChild>();
-                    child.SetRecord(manager, response.data);
-                }, null, records[i]);
+                MatchDTO matchDTO = null;
+
+                yield return manager.RequestService.GetMatchDetailRecord((response) => { matchDTO = response.data; }, null, records[i]);
+
+                MatchRecordChild child = (i + 1) > m_recordScrollView.content.childCount ? Instantiate(m_recordPrefab, m_recordScrollView.content) : m_recordScrollView.content.GetChild(i).GetComponent<MatchRecordChild>();
+                child.SetRecord(manager, matchDTO);
+                child.gameObject.SetActive(true);
+
+                yield return null;
             }
 
             if (onComplete != null)

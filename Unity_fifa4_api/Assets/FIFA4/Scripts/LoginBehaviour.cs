@@ -106,6 +106,7 @@ namespace FIFA4
                 // Login failed.
                 else
                 {
+                    Debug.LogWarning(response.errorMessage);
                     DOVirtual.DelayedCall(0.1f, m_loginFailed.Invoke);
                 }
             }, null, nickname);

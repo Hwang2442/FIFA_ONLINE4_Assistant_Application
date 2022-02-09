@@ -125,7 +125,7 @@ namespace FIFA4
             m_spid = JsonHelper.LoadJson<Spid[]>(PathList.SpidPath);
             m_matchRecordPanel.Initialize();
 
-            yield return m_transactionPanel.Co_RecordsUpdate(this, null, null);
+            //yield return m_transactionPanel.Co_RecordsUpdate(this, null, null);
             //yield return m_matchRecordPanel.Co_RecordUpdate(this, (from matchType in JsonHelper.LoadJson<MatchType[]>(PathList.MatchTypePath) where matchType.description == "공식경기" select matchType).First(), null, null);
 
             m_loading.Hide();

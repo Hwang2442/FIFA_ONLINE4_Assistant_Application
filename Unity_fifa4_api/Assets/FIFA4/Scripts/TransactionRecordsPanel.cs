@@ -17,7 +17,7 @@ namespace FIFA4
         [SerializeField] CanvasGroup m_canvas;
         [SerializeField] TextMeshProUGUI m_descText;
         [SerializeField] ScrollRect m_scrollView;
-        [SerializeField] TransactionRecord m_transactionRecordPrefab;
+        [SerializeField] TransactionRecordChild m_transactionRecordPrefab;
 
         [Header("Filter")]
         [SerializeField] Button m_filterAllButton;
@@ -28,7 +28,7 @@ namespace FIFA4
         [SerializeField] Button m_showHideButton;
 
         [Space]
-        [SerializeField] List<TransactionRecord> m_transactionRecordList = new List<TransactionRecord>();
+        [SerializeField] List<TransactionRecordChild> m_transactionRecordList = new List<TransactionRecordChild>();
 
         private void Start()
         {
@@ -44,6 +44,11 @@ namespace FIFA4
 
         public Sequence Show()
         {
+            if (m_transactionRecordList.Count == 0)
+            {
+                StartCoroutine(Co_RecordsUpdate(GameManager.Instance, null, null));
+            }
+
             Sequence sequence = DOTween.Sequence().OnStart(() => m_showHideButton.image.raycastTarget = false).OnComplete(() => m_showHideButton.image.raycastTarget = true);
 
             sequence.Append(m_showHideButton.image.rectTransform.DOLocalRotate(new Vector3(0, 0, -90), 0.5f, RotateMode.FastBeyond360));

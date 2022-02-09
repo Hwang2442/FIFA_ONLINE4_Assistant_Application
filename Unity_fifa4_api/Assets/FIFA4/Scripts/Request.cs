@@ -416,7 +416,7 @@ namespace FIFA4
                 yield break;
             }
 
-            yield return UpdatePlayerImageFromSpid((response) =>
+            yield return UpdatePlayerImageFromPid((response) =>
             {
                 if (response.isError)
                     return;

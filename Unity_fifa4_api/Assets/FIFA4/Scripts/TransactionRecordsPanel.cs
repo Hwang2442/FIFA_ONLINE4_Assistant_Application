@@ -12,10 +12,12 @@ namespace FIFA4
     public class TransactionRecordsPanel : MonoBehaviour
     {
         [SerializeField] RectTransform m_rect;
+        [SerializeField] bool m_isUpdated = false;
 
         [Header("UI")]
         [SerializeField] CanvasGroup m_canvas;
         [SerializeField] TextMeshProUGUI m_descText;
+        [SerializeField] TextMeshProUGUI m_emptyText;
         [SerializeField] ScrollRect m_scrollView;
         [SerializeField] TransactionRecordChild m_transactionRecordPrefab;
 
@@ -26,13 +28,32 @@ namespace FIFA4
 
         [Space]
         [SerializeField] Button m_showHideButton;
+        [SerializeField] LoadingBehaviour m_loading;
 
         [Space]
         [SerializeField] List<TransactionRecordChild> m_transactionRecordList = new List<TransactionRecordChild>();
 
+        public bool IsUpdated
+        {
+            get { return m_isUpdated; }
+            set
+            {
+                if (!value)
+                {
+                    m_transactionRecordList.Clear();
+                    foreach (Transform child in m_scrollView.content)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                }
+                    
+                m_isUpdated = value;
+            }
+        }
         private void Start()
         {
             m_showHideButton.image.rectTransform.localRotation = Quaternion.Euler(0, 0, 90);
+            m_emptyText.gameObject.SetActive(false);
 
             m_filterAllButton.onClick.Invoke();
         }
@@ -44,12 +65,27 @@ namespace FIFA4
 
         public Sequence Show()
         {
-            if (m_transactionRecordList.Count == 0)
+            Sequence sequence = DOTween.Sequence().OnStart(() => 
             {
-                StartCoroutine(Co_RecordsUpdate(GameManager.Instance, null, null));
-            }
+                m_showHideButton.image.raycastTarget = false; 
+                if (!m_isUpdated && m_transactionRecordList.Count == 0)
+                {
+                    m_loading.Show("데이터를 불러오고 있습니다...");
+                }
+            }).OnComplete(() => 
+            { 
+                m_showHideButton.image.raycastTarget = true;
+                if (!m_isUpdated && m_transactionRecordList.Count == 0)
+                {
+                    StartCoroutine(Co_RecordsUpdate(GameManager.Instance, null, () =>
+                    {
+                        m_loading.Hide();
+                        IsUpdated = true;
 
-            Sequence sequence = DOTween.Sequence().OnStart(() => m_showHideButton.image.raycastTarget = false).OnComplete(() => m_showHideButton.image.raycastTarget = true);
+                        m_emptyText.gameObject.SetActive(m_transactionRecordList.Count == 0);
+                    }));
+                }
+            });
 
             sequence.Append(m_showHideButton.image.rectTransform.DOLocalRotate(new Vector3(0, 0, -90), 0.5f, RotateMode.FastBeyond360));
             sequence.Join(m_descText.DOFade(0, 0.5f).From(1));

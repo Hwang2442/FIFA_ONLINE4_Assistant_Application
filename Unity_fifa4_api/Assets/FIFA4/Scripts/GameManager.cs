@@ -139,5 +139,11 @@ namespace FIFA4
             sequence.Append(m_informationPanel.Show());
             sequence.Join(m_canvas.DOFade(1, 0.5f).From(0));
         }
+
+        #region Utilites
+
+        
+
+        #endregion
     }
 }

@@ -11,10 +11,12 @@ namespace FIFA4
     public class MatchRecordsPanel : MonoBehaviour
     {
         [SerializeField] RectTransform m_rect;
+        [SerializeField] bool m_isUpdated = false;
 
         [Header("UI")]
         [SerializeField] CanvasGroup m_canvas;
         [SerializeField] TextMeshProUGUI m_descText;
+        [SerializeField] TextMeshProUGUI m_emptyText;
         [SerializeField] ScrollRect m_recordScrollView;
         [SerializeField] MatchRecordChild m_recordPrefab;
 
@@ -23,7 +25,28 @@ namespace FIFA4
 
         [Space]
         [SerializeField] Button m_showHideButton;
+        [SerializeField] LoadingBehaviour m_loading;
 
+        [Space]
+        [SerializeField] List<MatchRecordChild> m_matchRecordList;
+
+        public bool IsUpdated
+        {
+            get { return m_isUpdated; }
+            set
+            {
+                if (!value)
+                {
+                    m_matchRecordList.Clear();
+                    foreach (Transform child in m_recordScrollView.content)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                }
+
+                m_isUpdated = value;
+            }
+        }
         private void Start()
         {
             m_showHideButton.image.rectTransform.localRotation = Quaternion.Euler(0, 0, -90);
@@ -43,6 +66,8 @@ namespace FIFA4
                 button.GetComponentInChildren<TextMeshProUGUI>().text = matchTypes[i].description;
                 button.onClick.AddListener(() => OnClickFilterButton(button));
             }
+
+            prefab.interactable = false;
         }
 
         public Sequence ShowAndHide()
@@ -52,7 +77,24 @@ namespace FIFA4
 
         public Sequence Show()
         {
-            Sequence sequence = DOTween.Sequence().OnStart(() => m_showHideButton.image.raycastTarget = false).OnComplete(() => m_showHideButton.image.raycastTarget = true);
+            Sequence sequence = DOTween.Sequence().OnStart(() => 
+            { 
+                m_showHideButton.image.raycastTarget = false; 
+                if (!m_isUpdated && m_matchRecordList.Count == 0)
+                {
+                    m_loading.Show("데이터를 불러오고 있습니다...");
+                }
+            }).OnComplete(() => 
+            { 
+                m_showHideButton.image.raycastTarget = true;
+                if (!m_isUpdated && m_matchRecordList.Count == 0)
+                {
+                    StartCoroutine(Co_RecordUpdate(GameManager.Instance, JsonHelper.LoadJson<MatchType[]>(PathList.MatchTypePath)[0], null, () =>
+                    {
+                        m_loading.Hide();
+                    }));
+                }
+            });
 
             sequence.Append(m_showHideButton.image.rectTransform.DOLocalRotate(new Vector3(0, 0, 90), 0.5f, RotateMode.FastBeyond360));
             sequence.Join(m_descText.DOFade(0, 0.5f).From(1));
@@ -106,11 +148,11 @@ namespace FIFA4
 
                 yield return manager.RequestService.GetMatchDetailRecord((response) => { matchDTO = response.data; }, null, records[i]);
 
-                MatchRecordChild child = (i + 1) > m_recordScrollView.content.childCount ? Instantiate(m_recordPrefab, m_recordScrollView.content) : m_recordScrollView.content.GetChild(i).GetComponent<MatchRecordChild>();
-                child.SetRecord(manager, matchDTO);
-                child.gameObject.SetActive(true);
-
-                yield return null;
+                if ((i + 1) > m_matchRecordList.Count)
+                    m_matchRecordList.Add(Instantiate(m_recordPrefab, m_recordScrollView.content));
+                
+                m_matchRecordList[i].SetRecord(manager, matchDTO);
+                m_matchRecordList[i].gameObject.SetActive(true);
             }
 
             if (onComplete != null)

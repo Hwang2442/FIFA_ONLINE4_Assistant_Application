@@ -75,10 +75,12 @@ namespace FIFA4
             SetDownloadingEvents();
         }
 
+        #region Utilities
+
         private void SetLoginEvents()
         {
             m_login.Failed.AddListener(() => m_notification.Show("닉네임을 찾을 수 없습니다."));
-            m_login.Successed.AddListener((user) => 
+            m_login.Successed.AddListener((user) =>
             {
                 m_user = user;
                 m_downloading.DownloadingStart();
@@ -87,7 +89,7 @@ namespace FIFA4
 
         private void SetDownloadingEvents()
         {
-            m_downloading.OnFailed.AddListener((description) => 
+            m_downloading.OnFailed.AddListener((description) =>
             {
                 m_notification.Show(description, () =>
                 {
@@ -106,11 +108,29 @@ namespace FIFA4
             });
         }
 
+        private void OnPanelSequenceStart(UnityEngine.UI.Button button)
+        {
+            if (!m_informationPanel.isHiding)
+            {
+                button.interactable = false;
+            }
+        }
+
+        private void OnPanelSequenceComplete(UnityEngine.UI.Button button)
+        {
+            if (!m_informationPanel.isHiding)
+            {
+                button.interactable = true;
+            }
+        }
+
+        #endregion
+
         #region Button methods
 
         public void OnClickTransactionButton()
         {
-            Sequence sequence = DOTween.Sequence();
+            Sequence sequence = DOTween.Sequence().OnStart(() => OnPanelSequenceStart(m_matchRecordPanel.ShowHideButton)).OnComplete(() => OnPanelSequenceComplete(m_matchRecordPanel.ShowHideButton));
 
             sequence.Append(m_informationPanel.AlphaTweening(m_informationPanel.isHiding ? 1f : 0.1f, 0.5f));
             sequence.Join(m_transactionPanel.ShowAndHide());
@@ -118,7 +138,7 @@ namespace FIFA4
 
         public void OnClickMatchButton()
         {
-            Sequence sequence = DOTween.Sequence();
+            Sequence sequence = DOTween.Sequence().OnStart(() => OnPanelSequenceStart(m_transactionPanel.ShowHideButton)).OnComplete(() => OnPanelSequenceComplete(m_transactionPanel.ShowHideButton));
 
             sequence.Append(m_informationPanel.AlphaTweening(m_informationPanel.isHiding ? 1f : 0.1f, 0.5f));
             sequence.Join(m_matchRecordPanel.ShowAndHide());
@@ -147,11 +167,5 @@ namespace FIFA4
             sequence.Append(m_informationPanel.Show());
             sequence.Join(m_canvas.DOFade(1, 0.5f).From(0));
         }
-
-        #region Utilites
-
-        
-
-        #endregion
     }
 }

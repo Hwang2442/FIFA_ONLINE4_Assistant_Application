@@ -33,6 +33,7 @@ namespace FIFA4
         [Space]
         [SerializeField] List<TransactionRecordChild> m_transactionRecordList = new List<TransactionRecordChild>();
 
+        #region Properties
         public bool IsUpdated
         {
             get { return m_isUpdated; }
@@ -50,6 +51,11 @@ namespace FIFA4
                 m_isUpdated = value;
             }
         }
+
+        public Button ShowHideButton { get { return m_showHideButton; } }
+
+        #endregion
+
         private void Start()
         {
             m_showHideButton.image.rectTransform.localRotation = Quaternion.Euler(0, 0, 90);

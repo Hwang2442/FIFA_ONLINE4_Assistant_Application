@@ -50,6 +50,8 @@ namespace FIFA4
         private void Start()
         {
             m_showHideButton.image.rectTransform.localRotation = Quaternion.Euler(0, 0, -90);
+            m_emptyText.gameObject.SetActive(false);
+            m_loading.gameObject.SetActive(false);
         }
 
         public void Initialize()
@@ -91,7 +93,10 @@ namespace FIFA4
                 {
                     StartCoroutine(Co_RecordUpdate(GameManager.Instance, JsonHelper.LoadJson<MatchType[]>(PathList.MatchTypePath)[0], null, () =>
                     {
+                        IsUpdated = true;
                         m_loading.Hide();
+
+                        m_emptyText.gameObject.SetActive(m_matchRecordList.Count == 0);
                     }));
                 }
             });
@@ -118,12 +123,27 @@ namespace FIFA4
 
         private void OnClickFilterButton(Button button)
         {
+            StopAllCoroutines();
+
             foreach (var child in m_filterScrollView.content.GetComponentsInChildren<Button>())
             {
                 child.interactable = child.GetInstanceID() != button.GetInstanceID();
             }
 
-            StartCoroutine(Co_RecordUpdate(GameManager.Instance, JsonHelper.LoadJson<MatchType[]>(PathList.MatchTypePath)[button.transform.GetSiblingIndex()], null, null));
+            StartCoroutine(Co_RecordUpdate(GameManager.Instance, JsonHelper.LoadJson<MatchType[]>(PathList.MatchTypePath)[button.transform.GetSiblingIndex()], () => 
+            {
+                m_emptyText.gameObject.SetActive(false);
+                m_loading.Show("데이터를 불러오고 있습니다...");
+                foreach (Transform child in m_recordScrollView.content)
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }, () => 
+            {
+                m_loading.Hide();
+                m_emptyText.gameObject.SetActive(m_matchRecordList.Find(x => x.gameObject.activeSelf) == null);
+                m_recordScrollView.verticalNormalizedPosition = 1;
+            }));
         }
 
         #endregion
@@ -142,6 +162,8 @@ namespace FIFA4
                 child.gameObject.SetActive(false);
             }
 
+            List<UnityAction> actionList = new List<UnityAction>();
+
             for (int i = 0; i < records.Length; i++)
             {
                 MatchDTO matchDTO = null;
@@ -150,9 +172,19 @@ namespace FIFA4
 
                 if ((i + 1) > m_matchRecordList.Count)
                     m_matchRecordList.Add(Instantiate(m_recordPrefab, m_recordScrollView.content));
-                
-                m_matchRecordList[i].SetRecord(manager, matchDTO);
-                m_matchRecordList[i].gameObject.SetActive(true);
+
+                m_matchRecordList[i].gameObject.SetActive(false);
+                if (m_matchRecordList[i].SetRecord(manager, matchDTO))
+                {
+                    int x = i;
+                    actionList.Add(() => m_matchRecordList[x].gameObject.SetActive(true));
+                }
+                //m_matchRecordList[i].gameObject.SetActive(m_matchRecordList[i].SetRecord(manager, matchDTO));
+            }
+
+            foreach (var action in actionList)
+            {
+                action();
             }
 
             if (onComplete != null)

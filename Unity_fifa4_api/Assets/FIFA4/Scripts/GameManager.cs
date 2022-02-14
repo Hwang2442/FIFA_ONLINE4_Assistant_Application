@@ -116,6 +116,14 @@ namespace FIFA4
             sequence.Join(m_transactionPanel.ShowAndHide());
         }
 
+        public void OnClickMatchButton()
+        {
+            Sequence sequence = DOTween.Sequence();
+
+            sequence.Append(m_informationPanel.AlphaTweening(m_informationPanel.isHiding ? 1f : 0.1f, 0.5f));
+            sequence.Join(m_matchRecordPanel.ShowAndHide());
+        }
+
         #endregion
 
         private IEnumerator Co_DateUpdate()

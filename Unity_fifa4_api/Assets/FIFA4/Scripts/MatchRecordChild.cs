@@ -39,9 +39,12 @@ namespace FIFA4
             m_meText.text = me.nickname;
             m_otherText.text = other.nickname;
 
+            int myGoal = (me.matchDetail.matchEndType == 0 ? me.shoot.goalTotalDisplay : (me.matchDetail.matchEndType == 1 ? 5 : 0));
+            int otherGoal = (me.matchDetail.matchEndType == 0 ? other.shoot.goalTotalDisplay : (me.matchDetail.matchEndType == 1 ? 0 : 5));
+
             // Description
-            m_scoreText.text = string.Format("{0} : {1}", me.shoot.goalTotalDisplay, other.shoot.goalTotalDisplay);
             m_summaryText.text = (me.matchDetail.matchEndType == 0 ? me.matchDetail.matchResult : (me.matchDetail.matchEndType == 1 ? "몰수승" : "몰수패"));
+            m_scoreText.text = string.Format("{0} : {1}", myGoal, otherGoal);
             m_dateTimeText.text = match.matchDate.ToString("yyyy'년 'MM'월 'dd'일 'HH':'mm");
 
             return true;

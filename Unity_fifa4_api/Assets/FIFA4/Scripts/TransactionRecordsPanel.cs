@@ -54,6 +54,7 @@ namespace FIFA4
         {
             m_showHideButton.image.rectTransform.localRotation = Quaternion.Euler(0, 0, 90);
             m_emptyText.gameObject.SetActive(false);
+            m_loading.gameObject.SetActive(false);
 
             m_filterAllButton.onClick.Invoke();
         }

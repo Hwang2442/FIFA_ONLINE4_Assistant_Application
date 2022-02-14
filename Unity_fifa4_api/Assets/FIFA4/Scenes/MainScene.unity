@@ -1778,7 +1778,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uAC70\uB798 \uAE30\uB85D\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
+  m_text: "\uB9E4\uCE58 \uAE30\uB85D\uC774 \uC5C6\uC2B5\uB2C8\uB2E4."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f739544294ac6fb46a30528634257acb, type: 2}
   m_sharedMaterial: {fileID: -4657085375151281955, guid: f739544294ac6fb46a30528634257acb, type: 2}
@@ -3098,7 +3098,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 130}
+  m_SizeDelta: {x: -60, y: 130}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &531521418
 MonoBehaviour:
@@ -3114,7 +3114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Content: {fileID: 915206559}
   m_Horizontal: 1
-  m_Vertical: 1
+  m_Vertical: 0
   m_MovementType: 1
   m_Elasticity: 0.1
   m_Inertia: 1
@@ -4413,7 +4413,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 826075226}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1408250416}
+        m_TargetAssemblyTypeName: FIFA4.GameManager, Assembly-CSharp
+        m_MethodName: OnClickMatchButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &826075226
 MonoBehaviour:
   m_ObjectHideFlags: 0

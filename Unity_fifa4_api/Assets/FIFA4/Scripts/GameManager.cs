@@ -168,6 +168,21 @@ namespace FIFA4
             sequence.Join(m_matchRecordPanel.ShowAndHide());
         }
 
+        public void OnClickLogout()
+        {
+            m_transactionPanel.IsUpdated = false;
+            m_matchRecordPanel.IsUpdated = false;
+
+            Sequence sequence = DOTween.Sequence();
+
+            if (!m_transactionPanel.IsHiding) sequence.Join(m_transactionPanel.Hide());
+            if (!m_matchRecordPanel.IsHiding) sequence.Join(m_matchRecordPanel.Hide());
+
+            sequence.Append(m_informationPanel.Hide());
+            sequence.Join(m_canvas.DOFade(0, 0.5f).From(1));
+            sequence.Append(m_login.Show());
+        }
+
 #endregion
 
         private IEnumerator Co_DateUpdate()

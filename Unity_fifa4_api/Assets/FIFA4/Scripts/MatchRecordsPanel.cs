@@ -52,6 +52,14 @@ namespace FIFA4
 
         public Button ShowHideButton { get { return m_showHideButton; } }
 
+        public bool IsHiding
+        {
+            get
+            {
+                return m_showHideButton.image.rectTransform.localRotation.z < 0;
+            }
+        }
+
         #endregion
 
         private void Start()

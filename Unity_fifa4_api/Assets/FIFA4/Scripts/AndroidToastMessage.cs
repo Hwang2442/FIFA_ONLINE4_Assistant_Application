@@ -2,14 +2,18 @@
 
 public class AndroidToastMessage : MonoBehaviour
 {
-#if UNITY_ANDROID
-    static public AndroidToastMessage instance;
+#if UNITY_EDITOR
+    private void Awake()
+    {
+        Destroy(gameObject);
+    }
+#elif UNITY_ANDROID
+    public static AndroidToastMessage instance;
 
     AndroidJavaObject currentActivity;
-    AndroidJavaClass UnityPlayer;
+    AndroidJavaClass unityPlayer;
     AndroidJavaObject context;
     AndroidJavaObject toast;
-
 
     void Awake()
     {
@@ -18,8 +22,8 @@ public class AndroidToastMessage : MonoBehaviour
         else 
             Destroy(gameObject);
 
-        UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-        currentActivity = UnityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
+        unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+        currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity");
         context = currentActivity.Call<AndroidJavaObject>("getApplicationContext");
 
         DontDestroyOnLoad(gameObject);
@@ -40,11 +44,6 @@ public class AndroidToastMessage : MonoBehaviour
     public void CancelToast()
     {
         currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() => { if (toast != null) toast.Call("cancel"); }));
-    }
-#else
-    void Awake()
-    {
-        Destroy(gameObject);
     }
 #endif
 }

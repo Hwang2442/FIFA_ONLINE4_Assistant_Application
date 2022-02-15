@@ -64,6 +64,7 @@ namespace FIFA4
 
         private void Start()
         {
+#if !UNITY_EDITOR && UNITY_ANDROID
             m_exitSequence = DOTween.Sequence().SetAutoKill(false).OnUpdate(() => 
             {
                 if (Input.GetKeyDown(KeyCode.Escape))
@@ -73,6 +74,7 @@ namespace FIFA4
                 }
             });
             m_exitSequence.AppendInterval(0.5f);
+#endif
 
             m_canvas.alpha = 0;
             m_canvas.blocksRaycasts = false;
@@ -86,7 +88,7 @@ namespace FIFA4
             SetDownloadingEvents();
         }
 
-#if UNITY_ANDROID
+#if !UNITY_EDITOR && UNITY_ANDROID
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.Escape) && !m_exitSequence.IsPlaying())
@@ -97,7 +99,7 @@ namespace FIFA4
         }
 #endif
 
-        #region Utilities
+#region Utilities
 
         private void SetLoginEvents()
         {
@@ -146,15 +148,15 @@ namespace FIFA4
             }
         }
 
-        #endregion
+#endregion
 
-        #region Button methods
+#region Button methods
 
         public void OnClickTransactionButton()
         {
             Sequence sequence = DOTween.Sequence().OnStart(() => OnPanelSequenceStart(m_matchRecordPanel.ShowHideButton)).OnComplete(() => OnPanelSequenceComplete(m_matchRecordPanel.ShowHideButton));
 
-            sequence.Append(m_informationPanel.AlphaTweening(m_informationPanel.isHiding ? 1f : 0.1f, 0.5f));
+            sequence.Append(m_informationPanel.AlphaTweening(m_informationPanel.isHiding ? 1f : 0.1f, 0.2f));
             sequence.Join(m_transactionPanel.ShowAndHide());
         }
 
@@ -162,11 +164,11 @@ namespace FIFA4
         {
             Sequence sequence = DOTween.Sequence().OnStart(() => OnPanelSequenceStart(m_transactionPanel.ShowHideButton)).OnComplete(() => OnPanelSequenceComplete(m_transactionPanel.ShowHideButton));
 
-            sequence.Append(m_informationPanel.AlphaTweening(m_informationPanel.isHiding ? 1f : 0.1f, 0.5f));
+            sequence.Append(m_informationPanel.AlphaTweening(m_informationPanel.isHiding ? 1f : 0.1f, 0.2f));
             sequence.Join(m_matchRecordPanel.ShowAndHide());
         }
 
-        #endregion
+#endregion
 
         private IEnumerator Co_DateUpdate()
         {

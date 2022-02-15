@@ -108,9 +108,9 @@ namespace FIFA4
                 }
             });
 
-            sequence.Append(m_showHideButton.image.rectTransform.DOLocalRotate(new Vector3(0, 0, 90), 0.5f, RotateMode.FastBeyond360));
-            sequence.Join(m_descText.DOFade(0, 0.5f).From(1));
-            sequence.Join(m_rect.DOLocalMoveX(-m_rect.sizeDelta.x, 1).SetRelative(true));
+            sequence.Append(m_showHideButton.image.rectTransform.DOLocalRotate(new Vector3(0, 0, 90), 0.2f, RotateMode.FastBeyond360));
+            sequence.Join(m_descText.DOFade(0, 0.2f));
+            sequence.Join(m_rect.DOLocalMoveX(-m_rect.sizeDelta.x, 0.5f).SetRelative(true));
 
             return sequence;
         }
@@ -119,9 +119,9 @@ namespace FIFA4
         {
             Sequence sequence = DOTween.Sequence().OnStart(() => m_showHideButton.image.raycastTarget = false).OnComplete(() => m_showHideButton.image.raycastTarget = true);
 
-            sequence.Append(m_rect.DOLocalMoveX(m_rect.sizeDelta.x, 1).SetRelative(true));
-            sequence.Append(m_showHideButton.image.rectTransform.DOLocalRotate(new Vector3(0, 0, -90), 0.5f, RotateMode.FastBeyond360));
-            sequence.Join(m_descText.DOFade(1, 0.5f).From(0));
+            sequence.Append(m_rect.DOLocalMoveX(m_rect.sizeDelta.x, 0.5f).SetRelative(true));
+            sequence.Append(m_showHideButton.image.rectTransform.DOLocalRotate(new Vector3(0, 0, -90), 0.2f, RotateMode.FastBeyond360));
+            sequence.Join(m_descText.DOFade(1, 0.2f));
 
             return sequence;
         }

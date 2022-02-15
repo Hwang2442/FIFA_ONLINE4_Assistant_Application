@@ -28,6 +28,8 @@ namespace FIFA4
 
         Request m_request;
 
+        Sequence m_exitSequence;
+
         #endregion
 
         #region Properties
@@ -57,12 +59,21 @@ namespace FIFA4
         private void Awake()
         {
             Instance = this;
-
             m_request = new Request();
         }
 
         private void Start()
         {
+            m_exitSequence = DOTween.Sequence().SetAutoKill(false).OnUpdate(() => 
+            {
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    AndroidToastMessage.instance.CancelToast();
+                    Application.Quit();
+                }
+            });
+            m_exitSequence.AppendInterval(0.5f);
+
             m_canvas.alpha = 0;
             m_canvas.blocksRaycasts = false;
 
@@ -74,6 +85,17 @@ namespace FIFA4
             SetLoginEvents();
             SetDownloadingEvents();
         }
+
+#if UNITY_ANDROID
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) && !m_exitSequence.IsPlaying())
+            {
+                AndroidToastMessage.instance.ShowToast("'뒤로 가기'버튼을 한 번 더 누르면 종료됩니다.");
+                m_exitSequence.Play();
+            }
+        }
+#endif
 
         #region Utilities
 

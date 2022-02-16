@@ -82,7 +82,8 @@ namespace FIFA4
         {
             Sequence sequence = DOTween.Sequence().OnStart(() => 
             {
-                m_showHideButton.image.raycastTarget = false; 
+                m_showHideButton.image.raycastTarget = false;
+                m_emptyText.gameObject.SetActive(false);
                 if (!m_isUpdated && m_transactionRecordList.Count == 0)
                 {
                     m_loading.Show("데이터를 불러오고 있습니다...");

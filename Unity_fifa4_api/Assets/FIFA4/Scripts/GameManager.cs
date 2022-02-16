@@ -65,7 +65,7 @@ namespace FIFA4
         private void Start()
         {
 #if !UNITY_EDITOR && UNITY_ANDROID
-            m_exitSequence = DOTween.Sequence().SetAutoKill(false).OnUpdate(() => 
+            m_exitSequence = DOTween.Sequence().Pause().SetAutoKill(false).OnUpdate(() => 
             {
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
@@ -73,7 +73,7 @@ namespace FIFA4
                     Application.Quit();
                 }
             });
-            m_exitSequence.AppendInterval(0.5f);
+            m_exitSequence.AppendInterval(1);
 #endif
 
             m_canvas.alpha = 0;
@@ -94,12 +94,12 @@ namespace FIFA4
             if (Input.GetKeyDown(KeyCode.Escape) && !m_exitSequence.IsPlaying())
             {
                 AndroidToastMessage.instance.ShowToast("'뒤로 가기'버튼을 한 번 더 누르면 종료됩니다.");
-                m_exitSequence.Play();
+                DOVirtual.DelayedCall(0.1f, () => m_exitSequence.Restart());
             }
         }
 #endif
 
-#region Utilities
+        #region Utilities
 
         private void SetLoginEvents()
         {
@@ -189,8 +189,11 @@ namespace FIFA4
         {
             m_loading.Show("정보를 불러오고 있습니다...");
 
-            m_spid = JsonHelper.LoadJson<Spid[]>(PathList.SpidPath);
-            m_matchRecordPanel.Initialize();
+            if (m_spid == null || m_spid.Length == 0)
+            {
+                m_spid = JsonHelper.LoadJson<Spid[]>(PathList.SpidPath);
+                m_matchRecordPanel.Initialize();
+            }
 
             //yield return m_transactionPanel.Co_RecordsUpdate(this, null, null);
             //yield return m_matchRecordPanel.Co_RecordUpdate(this, (from matchType in JsonHelper.LoadJson<MatchType[]>(PathList.MatchTypePath) where matchType.description == "공식경기" select matchType).First(), null, null);

@@ -44,6 +44,11 @@ namespace FIFA4
                     {
                         Destroy(child.gameObject);
                     }
+
+                    for (int i = 0; i < m_filterScrollView.content.childCount; i++)
+                    {
+                        m_filterScrollView.content.GetChild(i).GetComponent<Button>().interactable = i != 0;
+                    }
                 }
 
                 m_isUpdated = value;

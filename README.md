@@ -8,7 +8,6 @@
 
 ## OpenAPI Docs
 - 이용 가이드 및 API KEY 발급에 관한 내용은 [이용 가이드](https://developers.nexon.com/fifaonline4/guides)를 참고해주세요.
-사용된 API 목록
 - **유저정보**
     - [유저 닉네임으로 유저 정보 조회](https://developers.nexon.com/fifaonline4/api/6/15)
     - [유저 고유 식별자로 역대 최고 등급 조회](https://developers.nexon.com/fifaonline4/api/6/17)

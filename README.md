@@ -1,6 +1,11 @@
 # [FIFA ONLINE4] OpenAPI
 - 피파온라인4 OpenAPI를 사용한 유니티 프로젝트입니다.
 
+## Playstore and YouTube
+[Playstore](https://play.google.com/store/apps/details?id=com.hwang.fifa4assistant)
+
+[![YouTube](http://img.youtube.com/vi/SloTAaVXK2U/0.jpg)](https://youtu.be/SloTAaVXK2U?t=0s) 
+
 ## 사용한 외부 에셋
 - TextMeshPro
 - [DOTween](https://assetstore.unity.com/packages/tools/visual-scripting/dotween-pro-32416)
